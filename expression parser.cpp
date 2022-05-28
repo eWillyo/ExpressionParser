@@ -19,12 +19,12 @@
 
 double Radians(double degree)
 {
-	return (degree * (M_PI / 180));
+	return (degree * (PI / 180));
 }
 
 double Degrees(double radians)
 {
-	return ((radians * 180) / M_PI);
+	return ((radians * 180) / PI);
 }
 
 class BaseNode
@@ -213,8 +213,8 @@ std::map<std::string, std::string> Parser::variables;
 
 void Parser::AddCommonVariables()
 {
-	variables["pi"] = std::to_string(M_PI);
-	variables["e"] = std::to_string(M_E);
+	variables["pi"] = std::to_string(PI);
+	variables["e"] = std::to_string(E);
 }
 
 double Parser::RoundOff(double value, unsigned int precision)

@@ -11,20 +11,20 @@
 
 #include <math.h>
 
-#define PI		3.14159265358979323846
-#define E		2.71828182845904523536
+#define M_PI		3.14159265358979323846
+#define M_E		2.71828182845904523536
 
-#define VERBOSE false
+#define VERBOSE		false
 
 
 double Radians(double degree)
 {
-	return (degree * (PI / 180));
+	return (degree * (M_PI / 180));
 }
 
 double Degrees(double radians)
 {
-	return ((radians * 180) / PI);
+	return ((radians * 180) / M_PI);
 }
 
 class BaseNode
@@ -119,9 +119,6 @@ public:
 		else if (_func == std::string("sqrt")) {
 			return (sqrt(_expression->value()));
 		}
-		/*else if (_func == std::string("pow")) {
-			return (pow(_expression->value(), 2));
-		}*/
 		else 
 			throw std::runtime_error("Unknown function: " + _func);
 
@@ -155,8 +152,7 @@ public:
 		DIVIDE='/',
 		POW='^',
 		LHPAREN='(',
-		RHPAREN=')',
-		//EQUAL='='
+		RHPAREN=')'
 	};
 
 private:
@@ -213,8 +209,8 @@ std::map<std::string, std::string> Parser::variables;
 
 void Parser::AddCommonVariables()
 {
-	variables["pi"] = std::to_string(PI);
-	variables["e"] = std::to_string(E);
+	variables["pi"] = std::to_string(M_PI);
+	variables["e"] = std::to_string(M_E);
 }
 
 double Parser::RoundOff(double value, unsigned int precision)
@@ -232,17 +228,16 @@ void Parser::CheckVariables()
 		GetToken();
 
 		if (type_ == VARIABLE_ASSIGN) {
-			//std::cout << "Assign!" << std::endl;
 			AssignVariable(word_);
 			break;
 		}
 
 		if (type_ == VARIABLE_SUBSTITUTION)
-			//std::cout << "Substitution!" << std::endl;
 			SubstituteVariable(word_);
 	}
 
-	std::cout << "Expression: " << program_ << std::endl;
+	if (VERBOSE)
+		std::cout << "Expression: " << program_ << std::endl;
 }
 
 bool Parser::AssignVariable(std::string variableName)
@@ -259,6 +254,7 @@ bool Parser::AssignVariable(std::string variableName)
 
 		if (VERBOSE)
 			std::cout << "VARIABLE_ASSIGNED(" << variableName << ": " << variable_value << ")" << std::endl;
+
 		return true;
 	}
 	else
@@ -278,6 +274,7 @@ bool Parser::SubstituteVariable(std::string variableName)
 		auto start = program_copy.begin() + index;
 		auto end = program_copy.begin() + index + variableName.size();
 		program_copy.replace(start, end, variables[variableName]);
+
 		if (VERBOSE)
 			std::cout << "REPLACING: " << variableName << ", " << variables[variableName] << std::endl;
 
@@ -296,57 +293,63 @@ Parser::TokenType Parser::CheckFunction(std::string name)
 	if (name == std::string("ln")) {
 		if (VERBOSE) 
 			std::cout << "LN function" << std::endl;
+
 		return type_ = TokenType(LN_FN);
 	}
 	else if (name == std::string("RAD")) {
 		if (VERBOSE)
 			std::cout << "RAD function" << std::endl;
+
 		return type_ = TokenType(RAD_FN);
 	}
 	else if (name == std::string("DEG")) {
 		if (VERBOSE)
 			std::cout << "DEG function" << std::endl;
+
 		return type_ = TokenType(DEG_FN);
 	}
 	else if (name == std::string("sin")) {
 		if (VERBOSE)
 			std::cout << "SIN function" << std::endl;
+
 		return type_ = TokenType(SIN_FN);
 	}
 	else if (name == std::string("cos")) {
 		if (VERBOSE)
 			std::cout << "COS function" << std::endl;
+
 		return type_ = TokenType(COS_FN);
 	}
 	else if (name == std::string("tan")) {
 		if (VERBOSE)
 			std::cout << "TAN function" << std::endl;
+
 		return type_ = TokenType(TAN_FN);
 	}
 	else if (name == std::string("abs")) {
 		if (VERBOSE)
 			std::cout << "ABS function" << std::endl;
+
 		return type_ = TokenType(ABS_FN);
 	}
 	else if (name == std::string("log")) {
 		if (VERBOSE)
 			std::cout << "LOG function" << std::endl;
+
 		return type_ = TokenType(LOG_FN);
 	}
 	else if (name == std::string("exp")) {
 		if (VERBOSE)
 			std::cout << "EXP function" << std::endl;
+
 		return type_ = TokenType(EXP_FN);
 	}
 	else if (name == std::string("sqrt")) {
 		if (VERBOSE)
 			std::cout << "SQRT function" << std::endl;
+
 		return type_ = TokenType(SQRT_FN);
 	}
-	/*if (word_ == std::string("pow")) {
-		std::cout << "POW function" << std::endl;
-		return type_ = TokenType(POW_FN);
-	}*/
 	else
 		return type_ = TokenType(NONE);
 }
@@ -369,8 +372,10 @@ const Parser::TokenType Parser::GetToken(const bool ignoreSign)
 	if (cFirstCharacter == 0)
 	{
 		word_ = "<end of expression>";
+
 		if (VERBOSE)
 			std::cout << "END" << std::endl;
+
 		return type_ = END;
 	}
 
@@ -400,6 +405,7 @@ const Parser::TokenType Parser::GetToken(const bool ignoreSign)
 
 		if (VERBOSE)
 			std::cout << "NUMBER (" << value_ << ")" << std::endl;
+
 		return type_ = NUMBER;
 	}
 
@@ -414,8 +420,10 @@ const Parser::TokenType Parser::GetToken(const bool ignoreSign)
 	case ')':
 		word_ = std::string(pWordStart_, 1);
 		++pWord_;
+
 		if (VERBOSE)
 			std::cout << cFirstCharacter << std::endl;
+		
 		return type_ = TokenType(cFirstCharacter);
 	}
 
@@ -474,7 +482,6 @@ void Parser::Primary(const bool get)
 		{
 			nodes.push_back(new NumNode(value_));
 			GetToken(true);
-			//Power(true);
 			break;
 		}
 		case MINUS:
@@ -486,7 +493,6 @@ void Parser::Primary(const bool get)
 			AddSubtract(true);
 			CheckToken(RHPAREN);
 			GetToken(true);
-			//Power(true);
 			break;
 		}
 		case RAD_FN:
@@ -691,6 +697,7 @@ const double Parser::Evaluate(unsigned int precision)
 	pWord_ = program_.c_str();
 	type_ = NONE;
 
+	// solve expression
 	AddSubtract(true);
 
 	if(type_ != END)

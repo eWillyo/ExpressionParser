@@ -191,10 +191,10 @@ private:
 	void ExecuteFunction(std::string functionName);
 
 	const TokenType GetToken(const bool ignoreSign = false);
-	void AddSubtract(const bool get);
+	void Primary(const bool get);
 	void Power(const bool get);
 	void Term(const bool get);
-	void Primary(const bool get);
+	void AddSubtract(const bool get);
 
 	inline void CheckToken(const TokenType wanted)
 	{

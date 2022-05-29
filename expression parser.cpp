@@ -71,7 +71,7 @@ public:
 			case '*': return leftValue * rightValue;
 			case '/': return leftValue / rightValue;
 			case '^': return pow(leftValue, rightValue);
-			default: throw std::runtime_error("Unknown operator: " + oper);;
+			default: throw std::runtime_error("Unknown operator: " + oper);
 		}
 	}
 };
@@ -122,7 +122,7 @@ public:
 		else 
 			throw std::runtime_error("Unknown function: " + _func);
 
-		// ...
+		// etc...
 	}
 };
 
@@ -176,7 +176,7 @@ public:
 		AddCommonVariables();
 	}
 
-	const double Evaluate(unsigned int precision = 2);
+	const double Evaluate(unsigned int precision);
 	const double Evaluate(const std::string & program, unsigned int precision = 2);
 
 private:
@@ -186,7 +186,9 @@ private:
 	void CheckVariables();
 	bool AssignVariable(std::string variableName);
 	bool SubstituteVariable(std::string variableName);
-	TokenType CheckFunction(std::string name);
+
+	TokenType CheckFunction(std::string functionName);
+	void ExecuteFunction(std::string functionName);
 
 	const TokenType GetToken(const bool ignoreSign = false);
 	void AddSubtract(const bool get);
@@ -290,61 +292,71 @@ bool Parser::SubstituteVariable(std::string variableName)
 Parser::TokenType Parser::CheckFunction(std::string name)
 {
 	// functions
-	if (name == std::string("ln")) {
-		if (VERBOSE) 
-			std::cout << "LN function" << std::endl;
+	if (name == std::string("RAD")) {
 
-		return type_ = TokenType(LN_FN);
-	}
-	else if (name == std::string("RAD")) {
 		if (VERBOSE)
 			std::cout << "RAD function" << std::endl;
 
 		return type_ = TokenType(RAD_FN);
 	}
 	else if (name == std::string("DEG")) {
+
 		if (VERBOSE)
 			std::cout << "DEG function" << std::endl;
 
 		return type_ = TokenType(DEG_FN);
 	}
 	else if (name == std::string("sin")) {
+
 		if (VERBOSE)
 			std::cout << "SIN function" << std::endl;
 
 		return type_ = TokenType(SIN_FN);
 	}
 	else if (name == std::string("cos")) {
+
 		if (VERBOSE)
 			std::cout << "COS function" << std::endl;
 
 		return type_ = TokenType(COS_FN);
 	}
 	else if (name == std::string("tan")) {
+
 		if (VERBOSE)
 			std::cout << "TAN function" << std::endl;
 
 		return type_ = TokenType(TAN_FN);
 	}
 	else if (name == std::string("abs")) {
+
 		if (VERBOSE)
 			std::cout << "ABS function" << std::endl;
 
 		return type_ = TokenType(ABS_FN);
 	}
+	if (name == std::string("ln")) {
+
+		if (VERBOSE)
+			std::cout << "LN function" << std::endl;
+
+		return type_ = TokenType(LN_FN);
+	}
 	else if (name == std::string("log")) {
+
 		if (VERBOSE)
 			std::cout << "LOG function" << std::endl;
 
 		return type_ = TokenType(LOG_FN);
 	}
 	else if (name == std::string("exp")) {
+
 		if (VERBOSE)
 			std::cout << "EXP function" << std::endl;
 
 		return type_ = TokenType(EXP_FN);
 	}
 	else if (name == std::string("sqrt")) {
+
 		if (VERBOSE)
 			std::cout << "SQRT function" << std::endl;
 
@@ -352,6 +364,16 @@ Parser::TokenType Parser::CheckFunction(std::string name)
 	}
 	else
 		return type_ = TokenType(NONE);
+}
+
+void Parser::ExecuteFunction(std::string functionName)
+{
+	GetToken(true);
+	CheckToken(LHPAREN);
+	AddSubtract(true);
+	CheckToken(RHPAREN);
+	GetToken(true);
+	nodes.push_back(new FuncNode(functionName, nodes.back()));
 }
 
 const Parser::TokenType Parser::GetToken(const bool ignoreSign)
@@ -371,7 +393,7 @@ const Parser::TokenType Parser::GetToken(const bool ignoreSign)
 
 	if (cFirstCharacter == 0)
 	{
-		word_ = "<end of expression>";
+		word_ = "<End of expression>";
 
 		if (VERBOSE)
 			std::cout << "END" << std::endl;
@@ -497,102 +519,52 @@ void Parser::Primary(const bool get)
 		}
 		case RAD_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("RAD", nodes.back()));
+			ExecuteFunction("RAD");
 			break;
 		}
 		case DEG_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("DEG", nodes.back()));
+			ExecuteFunction("DEG");
 			break;
 		}
 		case SIN_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("sin", nodes.back()));
+			ExecuteFunction("sin");
 			break;
 		}
 		case COS_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("cos", nodes.back()));
+			ExecuteFunction("cos");
 			break;
 		}
 		case TAN_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("tan", nodes.back()));
+			ExecuteFunction("tan");
 			break;
 		}
 		case ABS_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("abs", nodes.back()));
+			ExecuteFunction("abs");
 			break;
 		}
 		case LN_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("ln", nodes.back()));
+			ExecuteFunction("ln");
 			break;
 		}
 		case LOG_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("log", nodes.back()));
+			ExecuteFunction("log");
 			break;
 		}
 		case EXP_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("exp", nodes.back()));
+			ExecuteFunction("exp");
 			break;
 		}
 		case SQRT_FN:
 		{
-			GetToken(true);
-			CheckToken(LHPAREN);
-			AddSubtract(true);
-			CheckToken(RHPAREN);
-			GetToken(true);
-			nodes.push_back(new FuncNode("sqrt", nodes.back()));
+			ExecuteFunction("sqrt");
 			break;
 		}
 		default:
@@ -644,7 +616,7 @@ void Parser::Term(const bool get)
 					Power(true);
 
 					if(nodes.back()->value() == 0.0)
-						throw std::runtime_error("Dividing by zero");
+						throw std::runtime_error("Division by zero!");
 
 					nodes.push_back(new OperNode('/', temp, nodes.back()));
 					break;
@@ -736,7 +708,7 @@ int main()
 	}
 	catch(std::exception & e)
 	{
-		std::cout << "exception: " << e.what() << std::endl;
+		std::cout << "Exception: " << e.what() << std::endl;
 		return 1;
 	}
 	return 0;

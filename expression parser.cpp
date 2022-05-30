@@ -17,9 +17,9 @@
 #define VERBOSE		false
 
 
-double Radians(double degree)
+double Radians(double degrees)
 {
-	return (degree * (M_PI / 180));
+	return (degrees * (M_PI / 180));
 }
 
 double Degrees(double radians)
@@ -703,7 +703,7 @@ int main()
 			Parser p(inputline);
 			double value = p.Evaluate(5);
 
-			std::cout << "Result = " << value << std::endl;
+			std::cout << "Result: " << value << std::endl;
 		}
 	}
 	catch(std::exception & e)

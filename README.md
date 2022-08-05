@@ -7,4 +7,4 @@
  TODO: The last thing to do is to add some support for vectors and matrices (probably solved by external library).
 
 
-  ![Expression input](https://github.com/eWillyo/ExpressionParser/blob/a966ae5f640ba9ece3d49580170910264f50ac47/expression_input.png?raw=true)(https://www.youtube.com/watch?v=lFQNcjrtSyo)
+  [![Expression input](https://github.com/eWillyo/ExpressionParser/blob/a966ae5f640ba9ece3d49580170910264f50ac47/expression_input.png?raw=true)](https://www.youtube.com/watch?v=lFQNcjrtSyo)

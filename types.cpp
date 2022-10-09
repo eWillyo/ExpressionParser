@@ -126,8 +126,6 @@ value_t FuncNode::value()
 
 		switch (_expression1->value()._num_dims)
 		{
-		case 1:
-			throw std::runtime_error("Unknown operation on scalar");
 		case 2:
 			result._num_dims = 2;
 			result.vec2(glm::normalize(_expression1->value().to_vec2()));
@@ -140,6 +138,8 @@ value_t FuncNode::value()
 			result._num_dims = 4;
 			result.vec4(glm::normalize(_expression1->value().to_vec4()));
 			break;
+		default:
+			throw std::runtime_error("Wrong n-dimensional vector");
 		}
 
 		return result;
@@ -150,7 +150,7 @@ value_t FuncNode::value()
 		value_t right = _expression2->value();
 
 		if (left._num_dims != right._num_dims)
-			throw std::runtime_error("Different vector length at DOT product");
+			throw std::runtime_error("Different dimension count at n-dimensional function");
 
 		result._num_dims = 1;
 
@@ -165,7 +165,7 @@ value_t FuncNode::value()
 		case 4:
 			result._value[0] = glm::dot(left.to_vec4(), right.to_vec4());
 			break;
-		default: throw std::runtime_error("Unknown scalar operation");
+		default: throw std::runtime_error("Wrong n-dimensional vector");
 		}
 
 		return result;
@@ -176,7 +176,7 @@ value_t FuncNode::value()
 		value_t right = _expression2->value();
 
 		if ((left._num_dims != 3) && (right._num_dims != 3))
-			throw std::runtime_error("CROSS product needs 3D vectors");
+			throw std::runtime_error("Different dimension count at n-dimensional function");
 
 		result._num_dims = 3;
 		result.vec3(glm::cross(left.to_vec3(), right.to_vec3()));
@@ -190,10 +190,10 @@ value_t FuncNode::value()
 		value_t third = _expression3->value();
 
 		if (first._num_dims != second._num_dims)
-			throw std::runtime_error("Wrong number of dimensions for MIX function");
+			throw std::runtime_error("Different dimension count at n-dimensional function");
 
 		if (third._num_dims != 1)
-			throw std::runtime_error("Third parameter of MIX function must be scalar value");
+			throw std::runtime_error("Third parameter of function must be scalar value");
 
 		result._num_dims = first._num_dims;
 		switch (result._num_dims)
@@ -210,7 +210,7 @@ value_t FuncNode::value()
 		case 4:
 			result.vec4(glm::mix(first.to_vec4(), second.to_vec4(), third._value[0]));
 			break;
-		default: throw std::runtime_error("Wrong number of dimensions for MIX function");
+		default: throw std::runtime_error("Wrong n-dimensional vectors");
 		}
 
 		return result;

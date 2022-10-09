@@ -6,6 +6,8 @@
 
  NEW: Fixed few bugs and added support for basic vector operations.
  
+ TODO: Add support for matrices.
+ 
  # Examples
  
           Enter expression: sin(RAD(90))

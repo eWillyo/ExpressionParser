@@ -2,129 +2,20 @@
 // Expression parser to solve simple math problems..
 // Original thought: 31.5.2010 (significantly inspired by one old project on "codeproject.com")
 
-#include <string>
-#include <stdexcept>
+
 #include <sstream>
 #include <vector>
 #include <map>
 #include <iostream>
+#include <iomanip>
 
-#include <math.h>
+#include "operations.h"
+#include "types.h"
+#include "constants.h"
 
-#define M_PI		3.14159265358979323846
-#define M_E		2.71828182845904523536
 
 #define VERBOSE		false
 
-
-double Radians(double degrees)
-{
-	return (degrees * (M_PI / 180));
-}
-
-double Degrees(double radians)
-{
-	return ((radians * 180) / M_PI);
-}
-
-class BaseNode
-{
-public:
-	virtual double value() = 0;
-};
-
-class NumNode: public BaseNode
-{
-	double number;
-public:
-	NumNode(double value)
-	{
-		number = value;
-	}
-	virtual double value()
-	{
-		return number;
-	}
-};
-
-class OperNode: public BaseNode
-{
-	char oper;
-	BaseNode* left;
-	BaseNode* right;
-public:
-	OperNode(char oper, BaseNode* left, BaseNode* right)
-	{
-		this->oper = oper;
-		this->right = right;
-		this->left = left;
-	}
-	virtual double value()
-	{
-		double leftValue = left->value();
-		double rightValue = right->value();
-		
-		switch(oper)
-		{
-			case '+': return leftValue + rightValue;
-			case '-': return leftValue - rightValue;
-			case '*': return leftValue * rightValue;
-			case '/': return leftValue / rightValue;
-			case '^': return pow(leftValue, rightValue);
-			default: throw std::runtime_error("Unknown operator: " + oper);
-		}
-	}
-};
-
-class FuncNode : public BaseNode
-{
-	BaseNode* _expression;
-	std::string _func;
-
-public:
-	FuncNode(std::string func, BaseNode* expression)
-	{
-		_func = func;
-		_expression = expression;
-	}
-	virtual double value()
-	{
-		if (_func == std::string("RAD")) {
-			return (Radians(_expression->value()));
-		}
-		else if (_func == std::string("DEG")) {
-			return (Degrees(_expression->value()));
-		}
-		else if (_func == std::string("sin")) {
-			return (sin(_expression->value()));
-		}
-		else if (_func == std::string("cos")) {
-			return (cos(_expression->value()));
-		}
-		else if (_func == std::string("tan")) {
-			return (tan(_expression->value()));
-		}
-		else if (_func == std::string("abs")) {
-			return (fabs(_expression->value()));
-		}
-		else if (_func == std::string("ln")) {
-			return (log(_expression->value()));
-		}
-		else if (_func == std::string("log")) {
-			return (log10(_expression->value()));
-		}
-		else if (_func == std::string("exp")) {
-			return (exp(_expression->value()));
-		}
-		else if (_func == std::string("sqrt")) {
-			return (sqrt(_expression->value()));
-		}
-		else 
-			throw std::runtime_error("Unknown function: " + _func);
-
-		// etc...
-	}
-};
 
 class Parser
 {
@@ -132,7 +23,7 @@ public:
 	enum TokenType
 	{
 		NONE,
-		NUMBER,
+		SCALAR,
 		VARIABLE_ASSIGN,
 		VARIABLE_SUBSTITUTION,
 		END,
@@ -141,18 +32,30 @@ public:
 		SIN_FN,
 		COS_FN,
 		TAN_FN,
+		ASIN_FN,
+		ACOS_FN,
+		ATAN_FN,
 		ABS_FN,
 		LN_FN,
 		LOG_FN,
 		EXP_FN,
 		SQRT_FN,
+		VEC2_FN,
+		VEC3_FN,
+		VEC4_FN,
+		LENGTH_FN,
+		NORMALIZE_FN,
+		DOT_PRODUCT_FN,
+		CROSS_PRODUCT_FN,
+		MIX_FN,
 		PLUS='+',
 		MINUS='-',
 		MULTIPLY='*',
 		DIVIDE='/',
 		POW='^',
 		LHPAREN='(',
-		RHPAREN=')'
+		RHPAREN=')',
+		COMMA=','
 	};
 
 private:
@@ -161,9 +64,15 @@ private:
 	const char * pWord_;
 	const char * pWordStart_;
 
+	unsigned int dim_row_index_;
+	unsigned int dim_col_index_;
+	unsigned int max_dim_;
+
+	bool filling_multi_;
+
 	TokenType type_;
 	std::string word_;
-	double value_;
+	value_t value_;
 
 	std::vector<BaseNode*> nodes;
 
@@ -176,8 +85,10 @@ public:
 		AddCommonVariables();
 	}
 
-	const double Evaluate(unsigned int precision);
-	const double Evaluate(const std::string & program, unsigned int precision = 2);
+	std::string Value_to_str(value_t value, unsigned int precision = 2);
+
+	const value_t Evaluate();
+	const value_t Evaluate(const std::string & program);
 
 private:
 	void AddCommonVariables();
@@ -185,10 +96,13 @@ private:
 
 	void CheckVariables();
 	bool AssignVariable(std::string variableName);
-	bool SubstituteVariable(std::string variableName);
+	void SubstituteVariable(std::string variableName, std::string& program, const char* from);
 
 	TokenType CheckFunction(std::string functionName);
-	void ExecuteFunction(std::string functionName);
+	void ExecuteOneOneParameterFunction(std::string functionName);
+	void ExecuteTwoParameterFunction(std::string functionName);
+	void ExecuteThreeParameterFunction(std::string functionName);
+	void CreateVector();
 
 	const TokenType GetToken(const bool ignoreSign = false);
 	void Primary(const bool get);
@@ -227,7 +141,9 @@ void Parser::CheckVariables()
 	type_ = NONE;
 
 	while (type_ != END) {
-		GetToken();
+		const char* before = pWord_;
+
+		GetToken(true);
 
 		if (type_ == VARIABLE_ASSIGN) {
 			AssignVariable(word_);
@@ -235,7 +151,7 @@ void Parser::CheckVariables()
 		}
 
 		if (type_ == VARIABLE_SUBSTITUTION)
-			SubstituteVariable(word_);
+			SubstituteVariable(word_, program_, before);
 	}
 
 	if (VERBOSE)
@@ -249,10 +165,28 @@ bool Parser::AssignVariable(std::string variableName)
 
 	if (*pWord_ != 0) {
 		std::string variable_value = std::string((char*)pWord_, strlen(pWord_));
-		variables[variableName] = variable_value;
 
-		while (*pWord_ != 0)
-			++pWord_;
+		// avoid cyclic assignment
+		pWord_ = variable_value.c_str();
+		type_ = NONE;
+
+		while (type_ != END) {
+			const char* before = pWord_;
+
+			GetToken(true);
+
+			if (type_ == VARIABLE_SUBSTITUTION) {
+				if (word_ == variableName) {
+					if (VERBOSE)
+						std::cout << "Cyclic assigment: " << variable_value << std::endl;
+					SubstituteVariable(variableName, variable_value, before);
+				}
+			}
+		}
+
+		pWord_ = program_.c_str();
+		type_ = VARIABLE_ASSIGN;
+		variables[variableName] = variable_value;
 
 		if (VERBOSE)
 			std::cout << "VARIABLE_ASSIGNED(" << variableName << ": " << variable_value << ")" << std::endl;
@@ -263,30 +197,29 @@ bool Parser::AssignVariable(std::string variableName)
 		return false;
 }
 
-bool Parser::SubstituteVariable(std::string variableName)
+void Parser::SubstituteVariable(std::string variableName, std::string& program, const char* from)
 {
-	auto search = variables.find(variableName);
+	std::string program_copy = program;
 
-	if (search != variables.end()) {
-		std::string program_copy = program_;
+	while (*from && isspace(*from))
+		++from;
 
-		size_t index = 0;
-		index = program_copy.find(variableName, index);
+	if (*from != 0) {
+
+		size_t variable_length = variableName.length();
+		size_t index = from - program.c_str();
 
 		auto start = program_copy.begin() + index;
-		auto end = program_copy.begin() + index + variableName.size();
+		auto end = start + variable_length;
 		program_copy.replace(start, end, variables[variableName]);
 
 		if (VERBOSE)
 			std::cout << "REPLACING: " << variableName << ", " << variables[variableName] << std::endl;
 
-		program_ = program_copy;
-		pWord_ = program_.c_str();
-
-		return true;
+		program = program_copy;
+		pWord_ = program.c_str();
+		type_ = NONE;
 	}
-	else
-		return false;
 }
 
 Parser::TokenType Parser::CheckFunction(std::string name)
@@ -327,6 +260,27 @@ Parser::TokenType Parser::CheckFunction(std::string name)
 
 		return type_ = TokenType(TAN_FN);
 	}
+	else if (name == std::string("asin")) {
+
+		if (VERBOSE)
+			std::cout << "ASIN function" << std::endl;
+
+		return type_ = TokenType(ASIN_FN);
+	}
+	else if (name == std::string("acos")) {
+
+		if (VERBOSE)
+			std::cout << "ACOS function" << std::endl;
+
+		return type_ = TokenType(ACOS_FN);
+	}
+	else if (name == std::string("atan")) {
+
+		if (VERBOSE)
+			std::cout << "ATAN function" << std::endl;
+
+		return type_ = TokenType(ATAN_FN);
+	}
 	else if (name == std::string("abs")) {
 
 		if (VERBOSE)
@@ -362,18 +316,152 @@ Parser::TokenType Parser::CheckFunction(std::string name)
 
 		return type_ = TokenType(SQRT_FN);
 	}
+	else if (name == std::string("vec2")) {
+
+		if (VERBOSE)
+			std::cout << "VEC2 function" << std::endl;
+
+		return type_ = TokenType(VEC2_FN);
+	}
+	else if (name == std::string("vec3")) {
+
+		if (VERBOSE)
+			std::cout << "VEC3 function" << std::endl;
+
+		return type_ = TokenType(VEC3_FN);
+	}
+	else if (name == std::string("vec4")) {
+
+		if (VERBOSE)
+			std::cout << "VEC4 function" << std::endl;
+
+		return type_ = TokenType(VEC4_FN);
+	}
+	else if (name == std::string("length")) {
+
+		if (VERBOSE)
+			std::cout << "LENGTH function" << std::endl;
+
+		return type_ = TokenType(LENGTH_FN);
+	}
+	else if (name == std::string("normalize")) {
+
+		if (VERBOSE)
+			std::cout << "NORMALIZE function" << std::endl;
+
+		return type_ = TokenType(NORMALIZE_FN);
+	}
+	else if (name == std::string("dot")) {
+
+		if (VERBOSE)
+			std::cout << "DOT PRODUCT function" << std::endl;
+
+		return type_ = TokenType(DOT_PRODUCT_FN);
+	}
+	else if (name == std::string("cross")) {
+
+		if (VERBOSE)
+			std::cout << "CROSS PRODUCT function" << std::endl;
+
+		return type_ = TokenType(CROSS_PRODUCT_FN);
+	}
+	else if (name == std::string("mix")) {
+
+		if (VERBOSE)
+			std::cout << "MIX function" << std::endl;
+
+		return type_ = TokenType(MIX_FN);
+	}
 	else
 		return type_ = TokenType(NONE);
 }
 
-void Parser::ExecuteFunction(std::string functionName)
+void Parser::ExecuteOneOneParameterFunction(std::string functionName)
 {
+	BaseNode* first_par;
+
 	GetToken(true);
 	CheckToken(LHPAREN);
+
 	AddSubtract(true);
+	first_par = nodes.back();
+
 	CheckToken(RHPAREN);
 	GetToken(true);
-	nodes.push_back(new FuncNode(functionName, nodes.back()));
+
+	nodes.push_back(new FuncNode(functionName, first_par));
+}
+
+void Parser::ExecuteTwoParameterFunction(std::string functionName)
+{
+	BaseNode *first_par, *second_par;
+
+	GetToken(true);
+	CheckToken(LHPAREN);
+
+	AddSubtract(true);
+	first_par = nodes.back();
+
+	CheckToken(COMMA);
+
+	AddSubtract(true);
+	second_par = nodes.back();
+
+	CheckToken(RHPAREN);
+	GetToken(true);
+
+	nodes.push_back(new FuncNode(functionName, first_par, second_par));
+}
+
+void Parser::ExecuteThreeParameterFunction(std::string functionName)
+{
+	BaseNode *first_par, *second_par, *third_par;
+	GetToken(true);
+	CheckToken(LHPAREN);
+
+	AddSubtract(true);
+	first_par = nodes.back();
+
+	CheckToken(COMMA);
+
+	AddSubtract(true);
+	second_par = nodes.back();
+
+	CheckToken(COMMA);
+
+	AddSubtract(true);
+	third_par = nodes.back();
+
+	CheckToken(RHPAREN);
+	GetToken(true);
+
+	nodes.push_back(new FuncNode(functionName, first_par, second_par, third_par));
+}
+
+void Parser::CreateVector()
+{
+	dim_row_index_ = 0;
+	filling_multi_ = true;
+
+	for (unsigned int i = 0; i < max_dim_; i++)
+		value_._value[i] = 0.0;
+
+	GetToken(true);
+	CheckToken(LHPAREN);
+
+	do {
+		if (type_ == RHPAREN)
+			break;
+
+		AddSubtract(true);
+	} while (type_ == COMMA);
+
+	nodes.push_back(new NumNode(value_));
+
+	filling_multi_ = false;
+	dim_row_index_ = 0;
+	max_dim_ = 1;
+	GetToken(true);
 }
 
 const Parser::TokenType Parser::GetToken(const bool ignoreSign)
@@ -420,15 +508,16 @@ const Parser::TokenType Parser::GetToken(const bool ignoreSign)
 
 		std::istringstream is(word_);
 
-		is >> value_;
+		is >> value_._value[dim_row_index_];
+		value_._num_dims = max_dim_;
 
 		if (is.fail() || !is.eof())
 			throw std::runtime_error("Bad numeric literal: " + word_);
 
 		if (VERBOSE)
-			std::cout << "NUMBER (" << value_ << ")" << std::endl;
+			std::cout << "SCALAR (" << value_._value[dim_row_index_] << ") [" << dim_row_index_ << "]" << std::endl;
 
-		return type_ = NUMBER;
+		return type_ = SCALAR;
 	}
 
 	switch (cFirstCharacter)
@@ -440,6 +529,7 @@ const Parser::TokenType Parser::GetToken(const bool ignoreSign)
 	case '^':
 	case '(':
 	case ')':
+	case ',':
 		word_ = std::string(pWordStart_, 1);
 		++pWord_;
 
@@ -500,14 +590,31 @@ void Parser::Primary(const bool get)
 
 	switch(type_)
 	{
-		case NUMBER:
+		case SCALAR:
 		{
-			nodes.push_back(new NumNode(value_));
-			GetToken(true);
+			if (!filling_multi_)
+			{
+				nodes.push_back(new NumNode(value_));
+				GetToken(true);
+			}
+			else
+				AddSubtract(true);
 			break;
 		}
 		case MINUS:
 		{ 
+			break;
+		}
+		case COMMA:
+		{
+			if (filling_multi_)
+			{
+				++dim_row_index_;
+				if (dim_row_index_ == max_dim_)
+					throw std::runtime_error("Unexpected dimension index");
+			}
+			else
+				throw std::runtime_error("Unexpected character: \",\"");
 			break;
 		}
 		case LHPAREN:
@@ -517,54 +624,116 @@ void Parser::Primary(const bool get)
 			GetToken(true);
 			break;
 		}
+		case RHPAREN:
+		{
+			break;
+		}
 		case RAD_FN:
 		{
-			ExecuteFunction("RAD");
+			ExecuteOneOneParameterFunction("RAD");
 			break;
 		}
 		case DEG_FN:
 		{
-			ExecuteFunction("DEG");
+			ExecuteOneOneParameterFunction("DEG");
 			break;
 		}
 		case SIN_FN:
 		{
-			ExecuteFunction("sin");
+			ExecuteOneOneParameterFunction("sin");
 			break;
 		}
 		case COS_FN:
 		{
-			ExecuteFunction("cos");
+			ExecuteOneOneParameterFunction("cos");
 			break;
 		}
 		case TAN_FN:
 		{
-			ExecuteFunction("tan");
+			ExecuteOneOneParameterFunction("tan");
+			break;
+		}
+		case ASIN_FN:
+		{
+			ExecuteOneOneParameterFunction("asin");
+			break;
+		}
+		case ACOS_FN:
+		{
+			ExecuteOneOneParameterFunction("acos");
+			break;
+		}
+		case ATAN_FN:
+		{
+			ExecuteOneOneParameterFunction("atan");
 			break;
 		}
 		case ABS_FN:
 		{
-			ExecuteFunction("abs");
+			ExecuteOneOneParameterFunction("abs");
 			break;
 		}
 		case LN_FN:
 		{
-			ExecuteFunction("ln");
+			ExecuteOneOneParameterFunction("ln");
 			break;
 		}
 		case LOG_FN:
 		{
-			ExecuteFunction("log");
+			ExecuteOneOneParameterFunction("log");
 			break;
 		}
 		case EXP_FN:
 		{
-			ExecuteFunction("exp");
+			ExecuteOneOneParameterFunction("exp");
 			break;
 		}
 		case SQRT_FN:
 		{
-			ExecuteFunction("sqrt");
+			ExecuteOneOneParameterFunction("sqrt");
+			break;
+		}
+		case VEC2_FN:
+		{
+			max_dim_ = 2;
+			CreateVector();
+			break;
+		}
+		case VEC3_FN:
+		{
+			max_dim_ = 3;
+			CreateVector();
+			break;
+		}
+		case VEC4_FN:
+		{
+			max_dim_ = 4;
+			CreateVector();
+			break;
+		}
+		case LENGTH_FN:
+		{
+			ExecuteOneOneParameterFunction("length");
+			break;
+		}
+		case NORMALIZE_FN:
+		{
+			ExecuteOneOneParameterFunction("normalize");
+			break;
+		}
+		case DOT_PRODUCT_FN:
+		{
+			ExecuteTwoParameterFunction("dot");
+			break;
+		}
+		case CROSS_PRODUCT_FN:
+		{
+			ExecuteTwoParameterFunction("cross");
+			break;
+		}
+		case MIX_FN:
+		{
+			ExecuteThreeParameterFunction("mix");
 			break;
 		}
 		default:
@@ -615,7 +784,7 @@ void Parser::Term(const bool get)
 					BaseNode* temp = nodes.back();
 					Power(true);
 
-					if(nodes.back()->value() == 0.0)
+					if(nodes.back()->value()._value[0] == 0.0)
 						throw std::runtime_error("Division by zero!");
 
 					nodes.push_back(new OperNode('/', temp, nodes.back()));
@@ -658,16 +827,49 @@ void Parser::AddSubtract(const bool get)
 	}
 }
 
-const double Parser::Evaluate(unsigned int precision)
+std::string Parser::Value_to_str(value_t value, unsigned int precision)
+{
+	std::ostringstream result;
+
+	if (value._num_dims == 1)
+	{
+		//result << std::to_string((double)RoundOff(value._value[0], precision));
+		result << std::to_string(value._value[0]).substr(0, std::to_string(value._value[0]).find(".") + precision + 1);
+		return result.str();
+	}
+
+	result << std::string("( ");
+
+	for (unsigned int i = 0; i < value._num_dims; i++)
+	{
+		//result << std::to_string((double)RoundOff(value._value[i], precision));
+		result << std::to_string(value._value[i]).substr(0, std::to_string(value._value[i]).find(".") + precision + 1);
+		
+		if (i < (value._num_dims - 1))
+			result << std::string(", ");
+	}
+
+	result << std::string(" )");
+
+	return result.str();
+}
+
+const value_t Parser::Evaluate()
 {
 	// substitute variables
 	CheckVariables();
 
 	if (type_ == VARIABLE_ASSIGN)
-		return 0.0;
+		return value_t();
 
 	pWord_ = program_.c_str();
 	type_ = NONE;
+
+	dim_row_index_ = 0;
+	dim_col_index_ = 0;
+
+	max_dim_ = 1;
+	filling_multi_ = false;
 
 	// solve expression
 	AddSubtract(true);
@@ -675,15 +877,15 @@ const double Parser::Evaluate(unsigned int precision)
 	if(type_ != END)
 		throw std::runtime_error("Unexpected text at the end of expression " + std::string(pWordStart_));
 	
-	return RoundOff(nodes.back()->value(), precision);
+	return nodes.back()->value();
 }
 
-const double Parser::Evaluate(const std::string & program, unsigned int precision)
+const value_t Parser::Evaluate(const std::string & program)
 {
 	program_ = program;
 	nodes.clear();
 
-	return Evaluate(precision);
+	return Evaluate();
 }
 
 int main()
@@ -701,9 +903,9 @@ int main()
 				return 0;
 
 			Parser p(inputline);
-			double value = p.Evaluate(5);
+			value_t value = p.Evaluate();
 
-			std::cout << "Result: " << value << std::endl;
+			std::cout << "Result: " << p.Value_to_str(value, 3) << std::endl;
 		}
 	}
 	catch(std::exception & e)

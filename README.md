@@ -4,29 +4,40 @@
  Simple math solver with variables, goniometric functions, logarithms, etc. Original idea dates back to 2010. I significantly inspired myself on "codeproject.com", when I was creating this easy to implement expression parser. After years I came back to project and finally finished it. 
 
 
+# Dependencies
+
+
+The only library this project depends is GLM [https://github.com/g-truc/glm]. GLM is a header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specifications.
+
+
  NEW: Fixed few bugs and added support for basic vector operations.
  
  TODO: Add support for matrices.
  
  # Examples
  
+          Enter expression: 9 / 8
+          Result: 1.125
+          
           Enter expression: sin(RAD(90))
-          Result: 1.000
+          Result: 1
           
           Enter expression: a = 6.66
-          Result: 0.000
+          Result: 0
           Enter expression: 3 + (a - 7)^4
-          Result: 3.013
+          Result: 3.01336
           
           Enter expression: log(1000)
-          Result: 3.000
+          Result: 3
           
           Enter expression: v1 = vec3(1,0,0)
-          Result: 0.000
-          Enter expression: v2 = vec3(0,1,0)
-          Result: 0.000
+          Result: 0
+          Enter expression: v2 = vec3(0,2,0)
+          Result: 0
+          Enter expression: v2 = normalize(v2)
+          Result: 0
           Enter expression: DEG(acos(dot(v1,v2)))
-          Result: 90.000
+          Result: 90
           
 
 NOTE: To install on Linux just copy create_solver.sh file and run this commands:

@@ -85,9 +85,6 @@ public:
 		AddCommonVariables();
 	}
 
-	double RoundOff(double value, unsigned int precision);
-	std::string Value_to_str(value_t value, unsigned int precision = 2);
-
 	const value_t Evaluate();
 	const value_t Evaluate(const std::string & program);
 
@@ -821,39 +818,6 @@ void Parser::AddSubtract(const bool get)
 	}
 }
 
-double Parser::RoundOff(double value, unsigned int precision)
-{
-	double pow_10 = pow(10.0, (double)precision);
-	return round(value * pow_10) / pow_10;
-}
-
-std::string Parser::Value_to_str(value_t value, unsigned int precision)
-{
-	std::ostringstream result;
-
-	if (value._num_dims == 1)
-	{
-		//result << std::to_string((double)RoundOff(value._value[0], precision));
-		result << std::to_string(value._value[0]).substr(0, std::to_string(value._value[0]).find(".") + precision + 1);
-		return result.str();
-	}
-
-	result << std::string("( ");
-
-	for (unsigned int i = 0; i < value._num_dims; i++)
-	{
-		//result << std::to_string((double)RoundOff(value._value[i], precision));
-		result << std::to_string(value._value[i]).substr(0, std::to_string(value._value[i]).find(".") + precision + 1);
-		
-		if (i < (value._num_dims - 1))
-			result << std::string(", ");
-	}
-
-	result << std::string(" )");
-
-	return result.str();
-}
-
 const value_t Parser::Evaluate()
 {
 	// substitute variables
@@ -905,7 +869,7 @@ int main()
 			Parser p(inputline);
 			value_t value = p.Evaluate();
 
-			std::cout << "Result: " << p.Value_to_str(value, 3) << std::endl;
+			std::cout << "Result: " << value.to_str(6) << std::endl;
 		}
 	}
 	catch(std::exception & e)

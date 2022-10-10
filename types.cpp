@@ -1,6 +1,35 @@
 #include "types.h"
 #include "operations.h"
 
+#include <sstream>
+#include <iostream>
+
+
+std::string value_t::to_str(unsigned int max_precision)
+{
+	std::ostringstream result;
+
+	if (_num_dims == 1)
+	{
+		result << RoundOff(_value[0], max_precision);
+		return result.str();
+	}
+
+	result << std::string("( ");
+
+	for (unsigned int i = 0; i < _num_dims; i++)
+	{
+		result << RoundOff(_value[i], max_precision);
+
+		if (i < (_num_dims - 1))
+			result << std::string(", ");
+	}
+
+	result << std::string(" )");
+
+	return result.str();
+}
+
 value_t OperNode::value()
 {
 	value_t leftValue = left->value();

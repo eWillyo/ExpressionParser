@@ -56,6 +56,8 @@ typedef struct value {
 		_value[3] = v.w;
 	}
 
+	std::string to_str(unsigned int max_precision = 3);
+
 	unsigned int _num_dims;
 	glm::dvec4 _value;
 } value_t;

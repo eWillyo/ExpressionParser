@@ -13,6 +13,12 @@ double Degrees(double radians)
 	return ((radians * 180) / M_PI);
 }
 
+double RoundOff(double value, unsigned int precision)
+{
+	double pow_10 = pow(10.0, (double)precision);
+	return round(value * pow_10) / pow_10;
+}
+
 value_t Do_func(value_t value, double (*fnc)(double))
 {
 	for (unsigned int i = 0; i < value._num_dims; i++)

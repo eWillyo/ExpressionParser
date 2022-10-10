@@ -30,6 +30,7 @@
           
 
 NOTE: To install on Linux just copy create_solver.sh file and run this commands:
+
          chmod +x create_solver.sh
          sudo ./create_solver.sh
 

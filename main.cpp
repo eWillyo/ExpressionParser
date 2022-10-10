@@ -85,6 +85,7 @@ public:
 		AddCommonVariables();
 	}
 
+	double RoundOff(double value, unsigned int precision);
 	std::string Value_to_str(value_t value, unsigned int precision = 2);
 
 	const value_t Evaluate();
@@ -92,7 +93,6 @@ public:
 
 private:
 	void AddCommonVariables();
-	double RoundOff(double value, unsigned int precision);
 
 	void CheckVariables();
 	bool AssignVariable(std::string variableName);
@@ -127,12 +127,6 @@ void Parser::AddCommonVariables()
 {
 	variables["pi"] = std::to_string(M_PI);
 	variables["e"] = std::to_string(M_E);
-}
-
-double Parser::RoundOff(double value, unsigned int precision)
-{
-	double pow_10 = pow(10.0, (double)precision);
-	return round(value * pow_10) / pow_10;
 }
 
 void Parser::CheckVariables()
@@ -825,6 +819,12 @@ void Parser::AddSubtract(const bool get)
 				return;
 		}
 	}
+}
+
+double Parser::RoundOff(double value, unsigned int precision)
+{
+	double pow_10 = pow(10.0, (double)precision);
+	return round(value * pow_10) / pow_10;
 }
 
 std::string Parser::Value_to_str(value_t value, unsigned int precision)

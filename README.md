@@ -10,13 +10,16 @@
 The only library which this project depends on is GLM [https://github.com/g-truc/glm]. GLM is a header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specifications.
 
 
-
- NEW: Fixed few bugs and added support for basic vector operations.
+ # NEW: 
  
  
+ Fixed few bugs and added support for basic vector operations.
  
- TODO: Add support for matrices.
  
+ # TODO: 
+ 
+ 
+ Add support for matrices.
  
  
  # Examples
@@ -45,12 +48,10 @@ The only library which this project depends on is GLM [https://github.com/g-truc
           Result: 90
           
 
-
-NOTE: To install on Linux just copy create_solver.sh file and run this commands:
+NOTE: To install on Linux just copy "create_solver.sh" file and run this commands:
 
          chmod +x create_solver.sh
          sudo ./create_solver.sh
-
 
 
   [![Expression input](https://github.com/eWillyo/ExpressionParser/blob/a966ae5f640ba9ece3d49580170910264f50ac47/expression_input.png?raw=true)](https://www.youtube.com/watch?v=lFQNcjrtSyo)

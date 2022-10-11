@@ -7,7 +7,7 @@
 # Dependencies
 
 
-The only library which this project depends on is GLM [https://github.com/g-truc/glm]. GLM is a header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specifications.
+The only library which this project depends on (except STL) is GLM [https://github.com/g-truc/glm]. GLM is a header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specifications.
 
 
  # NEW: 

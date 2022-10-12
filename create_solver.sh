@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Installing necessary software.."
 
 sudo apt update &> /dev/null

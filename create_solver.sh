@@ -1,7 +1,6 @@
 #!/bin/bash
 
-echo "This script will download source files"
-echo "and compile 'math_solver' from"
+echo "This script will download source files and compile 'math_solver' from"
 echo "[https://github.com/eWillyo/ExpressionParser]."
 sleep 2
 echo "Installing necessary software.."
@@ -11,6 +10,7 @@ sudo apt install git g++ -y &> /dev/null
 
 echo "Done!"
 sleep 2
+echo ""
 echo "Downloading source code.."
 
 git clone https://github.com/eWillyo/ExpressionParser &> /dev/null

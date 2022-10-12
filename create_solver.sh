@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "This script will download source files\n and compile 'math_solver'\n[https://github.com/eWillyo/ExpressionParser]."
+sleep 2
 echo "Installing necessary software.."
 
 sudo apt update &> /dev/null

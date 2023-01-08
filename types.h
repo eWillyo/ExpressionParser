@@ -18,7 +18,7 @@ typedef struct value {
 		_num_dims = 1;
 	}
 
-	value(glm::dvec4 v, int d = 1) {
+	value(glm::dvec4 v, unsigned int d = 1) {
 		_value = v;
 		_num_dims = d;
 	}
@@ -61,6 +61,63 @@ typedef struct value {
 	unsigned int _num_dims;
 	glm::dvec4 _value;
 } value_t;
+
+typedef struct value_mat
+{
+	value_mat() {
+		_value = glm::dmat4(1.0);
+		_num_dims = 2;
+	}
+
+	value_mat(glm::dmat4 m, unsigned int d = 2) {
+		_value = m;
+		_num_dims = d;
+	}
+
+	glm::dmat2 to_mat2() {
+		return glm::dmat2(_value[0][0], _value[0][1],
+						  _value[1][0], _value[1][1]);
+	}
+
+	glm::dmat3 to_mat3() {
+		return glm::dmat3(_value[0][0], _value[0][1], _value[0][2],
+						  _value[1][0], _value[1][1], _value[1][2],
+						  _value[2][0], _value[2][1], _value[2][2]);
+	}
+
+	glm::dmat4 to_mat4() {
+		return glm::dmat4(_value[0][0], _value[0][1], _value[0][2], _value[0][3],
+						  _value[1][0], _value[1][1], _value[1][2], _value[1][3],
+						  _value[2][0], _value[2][1], _value[2][2], _value[2][3],
+						  _value[3][0], _value[3][1], _value[3][2], _value[3][3]);
+	}
+
+	void mat2(glm::dmat2 m) {
+		_num_dims = 2;
+		_value[0][0] = m[0][0]; _value[0][1] = m[0][1];
+		_value[1][0] = m[1][0]; _value[1][1] = m[0][0];
+	}
+
+	void mat3(glm::dmat3 m) {
+		_num_dims = 3;
+		_value[0][0] = m[0][0]; _value[0][1] = m[0][1]; _value[0][2] = m[0][2];
+		_value[1][0] = m[1][0]; _value[1][1] = m[1][1]; _value[1][2] = m[1][2];
+		_value[2][0] = m[2][0]; _value[2][1] = m[2][1]; _value[2][2] = m[2][2];
+	}
+
+	void mat4(glm::dmat4 m) {
+		_num_dims = 4;
+		_value[0][0] = m[0][0]; _value[0][1] = m[0][1]; _value[0][2] = m[0][2]; _value[0][3] = m[0][3];
+		_value[1][0] = m[1][0]; _value[1][1] = m[1][1]; _value[1][2] = m[1][2]; _value[1][3] = m[1][3];
+		_value[2][0] = m[2][0]; _value[2][1] = m[2][1]; _value[2][2] = m[2][2]; _value[2][3] = m[2][3];
+		_value[3][0] = m[3][0]; _value[3][1] = m[3][1]; _value[3][2] = m[3][2]; _value[3][3] = m[3][3];
+	}
+
+	std::string to_str(unsigned int max_precision = 3);
+
+	unsigned int _num_dims;
+	glm::dmat4 _value;
+} value_mat_t;
 
 class BaseNode
 {

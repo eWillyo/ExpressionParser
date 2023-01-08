@@ -30,6 +30,33 @@ std::string value_t::to_str(unsigned int max_precision)
 	return result.str();
 }
 
+std::string value_mat_t::to_str(unsigned int max_precision)
+{
+	std::ostringstream result;
+
+	result /* << std::string("( ")*/ << std::endl;
+
+	for (unsigned int i = 0; i < _num_dims; i++)
+	{
+		result << std::string("( ");
+
+		for (unsigned int j = 0; j < _num_dims; j++)
+		{
+			result << RoundOff(_value[i][j], max_precision);
+
+			if (j < (_num_dims - 1))
+				result << std::string(", ");
+		}
+
+		result << std::string(" )");
+		result << std::endl;
+	}
+
+	//result << std::string(" )");
+
+	return result.str();
+}
+
 value_t OperNode::value()
 {
 	value_t leftValue = left->value();

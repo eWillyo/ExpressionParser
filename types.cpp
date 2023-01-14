@@ -127,6 +127,12 @@ namespace Math_solver {
 				case '-': return value_t(glm::dvec4(leftValue.vec.to_vec4()[0] - rightValue.vec.to_vec4()[0]));
 				case '*': return value_t(glm::dvec4(leftValue.vec.to_vec4()[0] * rightValue.vec.to_vec4()[0]));
 				case '/': return value_t(glm::dvec4(leftValue.vec.to_vec4()[0] / rightValue.vec.to_vec4()[0]));
+				case '%': 
+					if (ceil(leftValue.vec.to_vec4()[0]) == leftValue.vec.to_vec4()[0] && 
+						ceil(rightValue.vec.to_vec4()[0]) == rightValue.vec.to_vec4()[0]) // check if integer
+						return value_t(glm::dvec4((long)leftValue.vec.to_vec4()[0] % (long)rightValue.vec.to_vec4()[0]));
+					else
+						throw std::runtime_error("Both operand must be integer");
 				case '^': return value_t(glm::dvec4(pow(leftValue.vec.to_vec4()[0], rightValue.vec.to_vec4()[0])));
 				default: throw std::runtime_error("Unknown scalar operator: " + oper);
 				}

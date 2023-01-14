@@ -293,6 +293,7 @@ namespace Math_solver {
 		case '-':
 		case '*':
 		case '/':
+		case '%':
 		case '^':
 		case '(':
 		case ')':
@@ -603,6 +604,14 @@ namespace Math_solver {
 					throw std::runtime_error("Division by zero!");
 
 				nodes.push_back(new OperNode('/', temp, nodes.back()));
+				break;
+			}
+
+			case MODULO:
+			{
+				BaseNode* temp = nodes.back();
+				Power(true); // get the next value...
+				nodes.push_back(new OperNode('%', temp, nodes.back()));
 				break;
 			}
 

@@ -38,7 +38,7 @@ namespace Math_solver {
 		for (unsigned int i = 0; i < lvalue.vec.get_num_dims(); i++)
 			result_temp[i] = fnc((double)lvalue.vec.to_vec4()[i], (double)rvalue.vec.to_vec4()[0]);
 
-		return value_t(result_temp, lvalue.vec.get_num_dims());//fill_value_vec(lvalue.vec.get_num_dims(), result_temp);
+		return value_t(result_temp, lvalue.vec.get_num_dims());
 	}
 
 	value_t Do_oper(value_t lvalue, value_t rvalue, double (*fnc)(double, double))
@@ -48,7 +48,7 @@ namespace Math_solver {
 		for (unsigned int i = 0; i < lvalue.vec.get_num_dims(); i++)
 			result_temp[i] = fnc((double)lvalue.vec.to_vec4()[i], (double)rvalue.vec.to_vec4()[i]);
 
-		return value_t(result_temp, lvalue.vec.get_num_dims());//fill_value_vec(lvalue.vec.get_num_dims(), result_temp);
+		return value_t(result_temp, lvalue.vec.get_num_dims());
 	}
 
 	value_t Do_func(TokenType func, BaseNode* expression1, BaseNode* expression2, BaseNode* expression3, BaseNode* expression4)

@@ -47,6 +47,7 @@ namespace Math_solver {
 		MINUS = '-',
 		MULTIPLY = '*',
 		DIVIDE = '/',
+		MODULO = '%',
 		POW = '^',
 		LHPAREN = '(',
 		RHPAREN = ')',

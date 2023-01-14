@@ -15,6 +15,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
  
   * Fixed few bugs and added support for basic vector operations.
   * Added basic support for matrices.
+  * Added few operations (modulo, factorial, ...)
  
  
  # TODO: 
@@ -41,6 +42,9 @@ The only library which this project depends on (except STL) is GLM [https://gith
           
           Enter expression: 113 % 10
           Result: 3
+          
+          Enter expression: 9! / 8!
+          Result: 9
           
           Enter expression: v1 = vec3(1,0,0)
           Result: 0

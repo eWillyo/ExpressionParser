@@ -5,115 +5,197 @@
 #include <iostream>
 
 
-std::string value_t::to_str(unsigned int max_precision)
-{
-	std::ostringstream result;
+namespace Math_solver {
 
-	if (_num_dims == 1)
+	std::string value_vec_t::to_str(unsigned int max_precision) const
 	{
-		result << RoundOff(_value[0], max_precision);
-		return result.str();
-	}
+		std::ostringstream result;
 
-	result << std::string("( ");
+		if (_num_dims == 1)
+		{
+			result << RoundOff(_value[0], max_precision);
+			return result.str();
+		}
 
-	for (unsigned int i = 0; i < _num_dims; i++)
-	{
-		result << RoundOff(_value[i], max_precision);
-
-		if (i < (_num_dims - 1))
-			result << std::string(", ");
-	}
-
-	result << std::string(" )");
-
-	return result.str();
-}
-
-std::string value_mat_t::to_str(unsigned int max_precision)
-{
-	std::ostringstream result;
-
-	result /* << std::string("( ")*/ << std::endl;
-
-	for (unsigned int i = 0; i < _num_dims; i++)
-	{
 		result << std::string("( ");
 
-		for (unsigned int j = 0; j < _num_dims; j++)
+		for (unsigned int i = 0; i < _num_dims; i++)
 		{
-			result << RoundOff(_value[i][j], max_precision);
+			result << RoundOff(_value[i], max_precision);
 
-			if (j < (_num_dims - 1))
+			if (i < (_num_dims - 1))
 				result << std::string(", ");
 		}
 
 		result << std::string(" )");
+
+		return result.str();
+	}
+
+	std::string value_mat_t::to_str(unsigned int max_precision) const
+	{
+		std::ostringstream result;
+
 		result << std::endl;
-	}
 
-	//result << std::string(" )");
-
-	return result.str();
-}
-
-value_t OperNode::value()
-{
-	value_t leftValue = left->value();
-	value_t rightValue = right->value();
-	value_t result;
-
-	unsigned int lnumdims = left->value()._num_dims;
-	unsigned int rnumdims = right->value()._num_dims;
-
-	if ((lnumdims == 1) && (rnumdims == 1)) // two scalars
-	{
-		switch (oper)
+		for (unsigned int i = 0; i < _num_dims; i++)
 		{
-		case '+': return value_t(glm::dvec4(leftValue._value[0] + rightValue._value[0]));
-		case '-': return value_t(glm::dvec4(leftValue._value[0] - rightValue._value[0]));
-		case '*': return value_t(glm::dvec4(leftValue._value[0] * rightValue._value[0]));
-		case '/': return value_t(glm::dvec4(leftValue._value[0] / rightValue._value[0]));
-		case '^': return value_t(glm::dvec4(pow(leftValue._value[0], rightValue._value[0])));
-		default: throw std::runtime_error("Unknown scalar operator: " + oper);
-		}
-	}
-	else if ((lnumdims == 1 && rnumdims != 1)) // one scalar, one vector
-	{
-		switch (oper)
-		{
-		case '+': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return a + b; });
-		case '-': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b - a; });
-		case '*': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return a * b; });
-		case '/': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b / a; });
-		default: throw std::runtime_error("Unknown scalar-vector operator: " + oper);
-		}
-	}
-	else if ((lnumdims != 1 && rnumdims == 1)) // one vector, one scalar
-	{
-		switch (oper)
-		{
-		case '+': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a + b; });
-		case '-': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a - b; });
-		case '*': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a * b; });
-		case '/': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a / b; });
-		default: throw std::runtime_error("Unknown vector-scalar operator: " + oper);
-		}
-	}
-	else if (lnumdims == rnumdims) // two (same-dimensional) vectors
-	{
-		switch (oper)
-		{
-		case '+': return Do_oper(leftValue, rightValue, [](auto a, auto b) {return a + b; });
-		case '-': return Do_oper(leftValue, rightValue, [](auto a, auto b) {return a - b; });
-		default: throw std::runtime_error("Unknown vector-vector operator: " + oper);
-		}
-	}
-	else
-		throw std::runtime_error("Different vectors");
-}
+			result << std::string("( ");
 
-value_t FuncNode::value()
-{
-	return Do_func(_func, _expression1, _expression2, _expression3);
+			for (unsigned int j = 0; j < _num_dims; j++)
+			{
+				result << RoundOff(_value[i][j], max_precision);
+
+				if (j < (_num_dims - 1))
+					result << std::string(", ");
+			}
+
+			result << std::string(" )");
+			result << std::endl;
+		}
+
+		return result.str();
+	}
+
+	value_t operator *(const value_t& left, const value_t& right)
+	{
+		value_t result;
+
+		if (!left.is_mat())
+			throw std::runtime_error("Bad operand order");
+
+		if (right.is_mat())
+		{
+			if (left.mat.get_num_dims() != right.mat.get_num_dims())
+				throw std::runtime_error("Different bases");
+
+			switch (right.mat.get_num_dims())
+			{
+			case 2:
+				result.mat.set_mat2(left.mat.to_mat2() * right.mat.to_mat2());
+				break;
+			case 3:
+				result.mat.set_mat3(left.mat.to_mat3() * right.mat.to_mat3());
+				break;
+			case 4:
+				result.mat.set_mat4(left.mat.to_mat4() * right.mat.to_mat4());
+				break;
+			default:
+				throw std::runtime_error("Wrong number of dimensions");
+			}
+		}
+		else // right is vector
+		{
+			if (left.mat.get_num_dims() != right.vec.get_num_dims())
+				throw std::runtime_error("Different bases");
+
+			switch (right.vec.get_num_dims())
+			{
+			case 2:
+				result.vec.set_vec2(left.mat.to_mat2() * right.vec.to_vec2());
+				break;
+			case 3:
+				result.vec.set_vec3(left.mat.to_mat3() * right.vec.to_vec3());
+				break;
+			case 4:
+				result.vec.set_vec4(left.mat.to_mat4() * right.vec.to_vec4());
+				break;
+			default:
+				throw std::runtime_error("Wrong number of dimensions");
+			}
+		}
+
+		return result;
+	}
+
+	value_t OperNode::value()
+	{
+		value_t leftValue = left->value();
+		value_t rightValue = right->value();
+		value_t result;
+
+		unsigned int lnumdims = left->value().vec.get_num_dims();
+		unsigned int rnumdims = right->value().vec.get_num_dims();
+
+		if (!leftValue.is_mat() && !rightValue.is_mat())
+		{
+			if ((lnumdims == 1) && (rnumdims == 1)) // two scalars
+			{
+				switch (oper)
+				{
+				case '+': return value_t(glm::dvec4(leftValue.vec.to_vec4()[0] + rightValue.vec.to_vec4()[0]));
+				case '-': return value_t(glm::dvec4(leftValue.vec.to_vec4()[0] - rightValue.vec.to_vec4()[0]));
+				case '*': return value_t(glm::dvec4(leftValue.vec.to_vec4()[0] * rightValue.vec.to_vec4()[0]));
+				case '/': return value_t(glm::dvec4(leftValue.vec.to_vec4()[0] / rightValue.vec.to_vec4()[0]));
+				case '^': return value_t(glm::dvec4(pow(leftValue.vec.to_vec4()[0], rightValue.vec.to_vec4()[0])));
+				default: throw std::runtime_error("Unknown scalar operator: " + oper);
+				}
+			}
+			else if ((lnumdims == 1 && rnumdims != 1)) // one scalar, one vector
+			{
+				switch (oper)
+				{
+				case '+': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return a + b; });
+				case '-': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b - a; });
+				case '*': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return a * b; });
+				case '/': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b / a; });
+				default: throw std::runtime_error("Unknown scalar-vector operator: " + oper);
+				}
+			}
+			else if ((lnumdims != 1 && rnumdims == 1)) // one vector, one scalar
+			{
+				switch (oper)
+				{
+				case '+': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a + b; });
+				case '-': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a - b; });
+				case '*': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a * b; });
+				case '/': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a / b; });
+				default: throw std::runtime_error("Unknown vector-scalar operator: " + oper);
+				}
+			}
+			else if (lnumdims == rnumdims) // two (same-dimensional) vectors
+			{
+				switch (oper)
+				{
+				case '+': return Do_oper(leftValue, rightValue, [](auto a, auto b) {return a + b; });
+				case '-': return Do_oper(leftValue, rightValue, [](auto a, auto b) {return a - b; });
+				default: throw std::runtime_error("Unknown vector-vector operator: " + oper);
+				}
+			}
+		}
+
+		if (leftValue.is_mat() && rightValue.is_mat()) // matrices
+		{
+			if (lnumdims == rnumdims) {
+				switch (oper)
+				{
+				case '*': return (leftValue * rightValue);
+				default: throw std::runtime_error("Unknown matrix-matrix operator: " + oper);
+				}
+			}
+			else
+				throw std::runtime_error("Different bases");
+		}
+
+		if (leftValue.is_mat() && !rightValue.is_mat()) // matrix-vector
+		{
+			if (lnumdims == rnumdims) {
+				switch (oper)
+				{
+				case '*': return (leftValue * rightValue);
+				default: throw std::runtime_error("Unknown matrix-vector operator: " + oper);
+				}
+			}
+			else
+				throw std::runtime_error("Different bases");
+		}
+
+		throw std::runtime_error("Wrong operation");
+	}
+
+	value_t FuncNode::value()
+	{
+		return Do_func(_func, _expression1, _expression2, _expression3, _expression4);
+	}
+
 }

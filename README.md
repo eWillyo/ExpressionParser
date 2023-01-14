@@ -54,11 +54,13 @@ The only library which this project depends on (except STL) is GLM [https://gith
           Result: ( 16, 16, 4, 1 )
           
 
-NOTE: To install on Linux (Debian) just copy "create_solver.sh" file and run it with this commands:
+
+NOTE: To install on Linux (Debian) just copy "create_solver.sh" file and run it with these commands:
 
          wget https://raw.githubusercontent.com/eWillyo/ExpressionParser/main/create_solver.sh
          chmod +x create_solver.sh
          sudo ./create_solver.sh
+
 
 
   [![Expression input](https://github.com/eWillyo/ExpressionParser/blob/a966ae5f640ba9ece3d49580170910264f50ac47/expression_input.png?raw=true)](https://www.youtube.com/watch?v=lFQNcjrtSyo)

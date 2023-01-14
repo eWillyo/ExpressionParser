@@ -14,7 +14,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
  
  
   * Fixed few bugs and added support for basic vector operations.
-  * Added basic support for matrices
+  * Added basic support for matrices.
  
  
  # TODO: 

@@ -39,6 +39,9 @@ The only library which this project depends on (except STL) is GLM [https://gith
           Enter expression: log(1000)
           Result: 3
           
+          Enter expression: 113 % 10
+          Result: 3
+          
           Enter expression: v1 = vec3(1,0,0)
           Result: 0
           Enter expression: v2 = vec3(0,2,0)

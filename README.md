@@ -48,6 +48,11 @@ The only library which this project depends on (except STL) is GLM [https://gith
           Enter expression: DEG(acos(dot(v1,v2)))
           Result: 90
           
+          Enter expression: t = rotate(translate(mat4(), vec3(10,10,10)), RAD(90), vec3(0,1,0))
+          Result: 0
+          Enter expression: t * vec4(6,6,6,1)
+          Result: ( 16, 16, 4, 1 )
+          
 
 NOTE: To install on Linux (Debian) just copy "create_solver.sh" file and run this commands:
 

@@ -10,6 +10,7 @@ namespace Math_solver {
 	double Radians(double degrees);
 	double Degrees(double radians);
 	double RoundOff(double value, unsigned int precision);
+	double Factorial(double value);
 
 	value_t Do_vector(value_t value, double (*fnc)(double));
 	value_t Do_scalar(value_t lvalue, value_t rvalue, double (*fnc)(double, double));

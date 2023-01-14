@@ -19,6 +19,21 @@ namespace Math_solver {
 	{
 		double pow_10 = pow(10.0, (double)precision);
 		return round(value * pow_10) / pow_10;
+	} 
+
+	double Factorial(double value)
+	{
+		if (ceil(value) == value && value > 0) // integer
+		{
+			int result = (int)value;
+
+			for (int i = (result - 1); i > 0; i--)
+				result *= i;
+
+			return (double)result;
+		}
+		else
+			throw std::runtime_error("Parameter must be integer greater than zero");
 	}
 
 	value_t Do_vector(value_t value, double (*fnc)(double))

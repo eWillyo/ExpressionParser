@@ -294,6 +294,7 @@ namespace Math_solver {
 		case '*':
 		case '/':
 		case '%':
+		case '!':
 		case '^':
 		case '(':
 		case ')':
@@ -369,6 +370,26 @@ namespace Math_solver {
 				AddSubtract(true);
 			break;
 		}
+		/*case FACTORIAL:
+		{
+			value_t par = nodes.back()->value();
+
+			if (!par.is_mat() && par.vec.get_num_dims() == 1) // scalar
+			{
+				std::cout << par.vec.to_scalar() << std::endl;
+
+				value_t result;
+
+				result.vec.set_scalar(Factorial(par.vec.to_scalar()));
+				nodes.push_back(new NumNode(result));
+
+				AddSubtract(true);
+			}
+			else
+				throw std::runtime_error("Value must be scalar");
+
+			break;
+		}*/
 		case MINUS:
 		{
 			break;
@@ -570,6 +591,24 @@ namespace Math_solver {
 				BaseNode* temp = nodes.back();
 				Primary(true);
 				nodes.push_back(new OperNode('^', temp, nodes.back()));
+				break;
+			}
+
+			case FACTORIAL:
+			{
+				value_t par = nodes.back()->value();
+
+				if (!par.is_mat() && par.vec.get_num_dims() == 1) // scalar
+				{
+					value_t result;
+
+					result.vec.set_scalar(Factorial(par.vec.to_scalar()));
+					nodes.push_back(new NumNode(result));
+					GetToken(true);
+				}
+				else
+					throw std::runtime_error("Value must be scalar");
+
 				break;
 			}
 

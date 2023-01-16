@@ -31,6 +31,9 @@ The only library which this project depends on (except STL) is GLM [https://gith
           
           Enter expression: sin(RAD(90))
           Result: 1
+
+          Enter expression: cos(pi)
+          Result: -1
           
           Enter expression: a = 6.66
           Result: 0

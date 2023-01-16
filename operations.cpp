@@ -25,9 +25,9 @@ namespace Math_solver {
 	{
 		if (ceil(value) == value && value > 0) // integer
 		{
-			int result = (int)value;
+			unsigned long result = (unsigned long)value;
 
-			for (int i = (result - 1); i > 0; i--)
+			for (unsigned long i = (result - 1); i > 0; i--)
 				result *= i;
 
 			return (double)result;

@@ -18,6 +18,7 @@ namespace Math_solver {
 	double RoundOff(double value, unsigned int precision)
 	{
 		double pow_10 = pow(10.0, (double)precision);
+		
 		return round(value * pow_10) / pow_10;
 	} 
 
@@ -25,9 +26,9 @@ namespace Math_solver {
 	{
 		if (ceil(value) == value && value > 0) // integer
 		{
-			unsigned long result = (unsigned long)value;
+			unsigned long long result = (unsigned long long)value;
 
-			for (unsigned long i = (result - 1); i > 0; i--)
+			for (unsigned long long i = (result - 1); i > 0; i--)
 				result *= i;
 
 			return (double)result;

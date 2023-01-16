@@ -37,7 +37,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
           Enter expression: 3 + (a - 7)^4
           Result: 3.01336
           
-          Enter expression: log(1000)
+          Enter expression: abs(log(1/1000))
           Result: 3
           
           Enter expression: 113 % 10

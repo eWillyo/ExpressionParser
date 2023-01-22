@@ -2,6 +2,9 @@
 #include "types.h"
 #include "operations.h"
 
+#include <vector>
+#include <iostream>
+
 
 namespace Math_solver {
 
@@ -20,7 +23,7 @@ namespace Math_solver {
 		double pow_10 = pow(10.0, (double)precision);
 		
 		return round(value * pow_10) / pow_10;
-	} 
+	}
 
 	double Factorial(double value)
 	{
@@ -34,7 +37,53 @@ namespace Math_solver {
 			return (double)result;
 		}
 		else
-			throw std::runtime_error("Parameter must be integer greater than zero");
+			throw std::runtime_error("Parameter must be integer number greater than zero");
+	}
+
+	std::string Format_number(double value, unsigned int precision)
+	{
+		value = RoundOff(value, precision);
+
+		std::string result = std::to_string(fabs(value));
+		bool is_decimal = (ceil(value) != value);
+		bool is_negative = (value < 0);
+
+		size_t decimal_pos = result.find('.');
+		std::string integer_part = result.substr(0, decimal_pos);
+		std::string decimal_part = result.substr(decimal_pos + 1);
+
+		// integer part
+		std::reverse(integer_part.begin(), integer_part.end());
+
+		for (std::string::size_type i = 0; i < integer_part.size(); i++) { // add thousands separators
+			if ((i != 0) && ((i + 1) % 4 == 0))
+				integer_part.insert(i, 1, ',');
+		}
+
+		std::reverse(integer_part.begin(), integer_part.end());
+
+		if (is_negative)
+			integer_part.insert(0, 1, '-');
+
+		result = integer_part;
+
+		// decimal part
+		if (is_decimal) {
+			std::reverse(decimal_part.begin(), decimal_part.end());
+
+			while (decimal_part[0] == '0') { // erase end zeroes
+				decimal_part.erase(0, 1);
+			}
+
+			std::reverse(decimal_part.begin(), decimal_part.end());
+
+			if (decimal_part.length() != 0) {
+				result += '.';
+				result += decimal_part;
+			}
+		}
+
+		return result;
 	}
 
 	value_t Do_vector(value_t value, double (*fnc)(double))

@@ -12,6 +12,8 @@ namespace Math_solver {
 	double RoundOff(double value, unsigned int precision);
 	double Factorial(double value);
 
+	std::string Format_number(double value, unsigned int precision);
+
 	value_t Do_vector(value_t value, double (*fnc)(double));
 	value_t Do_scalar(value_t lvalue, value_t rvalue, double (*fnc)(double, double));
 	value_t Do_oper(value_t lvalue, value_t rvalue, double (*fnc)(double, double));

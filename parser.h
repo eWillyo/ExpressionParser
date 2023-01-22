@@ -12,8 +12,6 @@
 #include "functions.h"
 #include "types.h"
 
-#define VERBOSE		false
-
 
 namespace Math_solver {
 

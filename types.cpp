@@ -1,5 +1,6 @@
 #include "types.h"
 #include "operations.h"
+#include "config.h"
 
 #include <sstream>
 #include <iostream>
@@ -11,16 +12,13 @@ namespace Math_solver {
 	std::string value_vec_t::to_str(unsigned int max_precision) const
 	{
 		std::ostringstream result;
-		bool is_integer;
 
 		if (_num_dims == 1)
 		{
-			is_integer = (ceil(_value[0]) == _value[0]); // integer
-
-			if (is_integer)
-				result << std::fixed << std::setprecision(0) << _value[0];
+			if (FORMAT_RESULT)
+				result << Format_number(_value[0], max_precision);
 			else
-				result << RoundOff(_value[0], max_precision);
+				result << std::to_string(RoundOff(_value[0], max_precision));
 
 			return result.str();
 		}
@@ -29,12 +27,10 @@ namespace Math_solver {
 
 		for (unsigned int i = 0; i < _num_dims; i++)
 		{
-			is_integer = (ceil(_value[i]) == _value[i]);
-
-			if (is_integer)
-				result << std::fixed << std::setprecision(0) << _value[i];
+			if (FORMAT_RESULT)
+				result << Format_number(_value[i], max_precision);
 			else
-				result << RoundOff(_value[i], max_precision);
+				result << std::to_string(RoundOff(_value[i], max_precision));
 
 			if (i < (_num_dims - 1))
 				result << std::string(", ");
@@ -48,7 +44,6 @@ namespace Math_solver {
 	std::string value_mat_t::to_str(unsigned int max_precision) const
 	{
 		std::ostringstream result;
-		bool is_integer;
 
 		result << std::endl;
 
@@ -58,12 +53,10 @@ namespace Math_solver {
 
 			for (unsigned int j = 0; j < _num_dims; j++)
 			{
-				is_integer = (ceil(_value[i][j]) == _value[i][j]);
-
-				if (is_integer)
-					result << std::fixed << std::setprecision(0) << _value[i][j];
+				if (FORMAT_RESULT)
+					result << Format_number(_value[i][j], max_precision);
 				else
-					result << RoundOff(_value[i][j], max_precision);
+					result << std::to_string(RoundOff(_value[i][j], max_precision));
 
 				if (j < (_num_dims - 1))
 					result << std::string(", ");

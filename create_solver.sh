@@ -23,7 +23,7 @@ echo "Done!"
 sleep 2
 echo "Compiling.."
 
-g++ -Wall -DNDEBUG -I./glm constants.h functions.h functions.cpp operations.h operations.cpp types.h types.cpp parser.h parser.cpp main.cpp -o math_solver &> /dev/null
+g++ -Wall -DNDEBUG -I./glm config.h constants.h functions.h functions.cpp operations.h operations.cpp types.h types.cpp parser.h parser.cpp main.cpp -o math_solver &> /dev/null
 
 chmod +x math_solver
 

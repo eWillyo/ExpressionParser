@@ -4,6 +4,7 @@
 // Author: Vilém Pantlík
 
 #include "parser.h"
+#include "config.h"
 
 
 int main()
@@ -24,9 +25,9 @@ int main()
 			Math_solver::value_t value = p.Evaluate();
 
 			if (value.is_mat())
-				std::cout << "Result: " << value.mat.to_str(6) << std::endl;
+				std::cout << "Result: " << value.mat.to_str(PRECISION) << std::endl;
 			else
-				std::cout << "Result: " << value.vec.to_str(6) << std::endl;
+				std::cout << "Result: " << value.vec.to_str(PRECISION) << std::endl;
 		}
 	}
 	catch(std::exception & e)

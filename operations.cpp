@@ -30,12 +30,12 @@ namespace Math_solver {
 	{
 		if (ceil(value) == value && value > 0) // integer
 		{
-			unsigned long long result = (unsigned long long)value;
+			double result = (double)value;
 
-			for (unsigned long long i = (result - 1); i > 0; i--)
+			for (unsigned long i = (unsigned long)(result - 1); i > 0; i--)
 				result *= i;
 
-			return (double)result;
+			return result;
 		}
 		else
 			throw std::runtime_error("Parameter must be integer number greater than zero");

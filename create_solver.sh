@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo "This script will download source files and compile 'math_solver' from"
+echo "This script will automatically download"
+echo "source files and compile 'math_solver' from"
 echo "[https://github.com/eWillyo/ExpressionParser]."
 echo ""
 sleep 2

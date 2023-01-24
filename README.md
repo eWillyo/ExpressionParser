@@ -1,7 +1,7 @@
 # Expression parser
 
 
- Simple math solver with variables, goniometric functions, logarithms, etc. This project should suits C++11 standards. Original idea dates back to 2010. I significantly inspired myself on "codeproject.com", when I was creating this easy to implement expression parser. After years I came back to project and finally finished it. 
+ Simple math solver with variables, goniometric functions, logarithms, vectors, etc. This project should suits C++11 standards. Original idea dates back to 2010. I significantly inspired myself on "codeproject.com", when I was creating this easy to implement expression parser. After years I came back to project and finally finished it. 
 
 
 # Dependencies

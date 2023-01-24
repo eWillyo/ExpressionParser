@@ -15,7 +15,7 @@ namespace Math_solver {
 		if (VERBOSE && fmt != nullptr)
 		{
 			va_start(va, fmt);
-			vsprintf_s(text, 255, fmt, va);
+			vsprintf(text, fmt, va);
 			va_end(va);
 
 			// print info
@@ -33,12 +33,12 @@ namespace Math_solver {
 			return;
 
 		va_start(va, fmt);
-		vsprintf_s(formated_text, 255, fmt, va);
+		vsprintf(formated_text, fmt, va);
 		va_end(va);
 
 		// add debug info
 		char output_text[300];
-		sprintf_s(output_text, "Warning: \"%s\" (line: %d) function: \'%s\' -> %s", file, line, func, formated_text);
+		sprintf(output_text, "Warning: \"%s\" (line: %d) function: \'%s\' -> %s", file, line, func, formated_text);
 
 		// print warning
 		printf("%s\n", output_text);
@@ -53,12 +53,12 @@ namespace Math_solver {
 			return;
 
 		va_start(va, fmt);
-		vsprintf_s(formated_text, 255, fmt, va);
+		vsprintf(formated_text, fmt, va);
 		va_end(va);
 
 		// add debug info
 		char output_text[300];
-		sprintf_s(output_text, "Error: \"%s\" (line: %d) function: \'%s\' -> %s", file, line, func, formated_text);
+		sprintf(output_text, "Error: \"%s\" (line: %d) function: \'%s\' -> %s", file, line, func, formated_text);
 
 		// throw exception
 		throw std::runtime_error(output_text);

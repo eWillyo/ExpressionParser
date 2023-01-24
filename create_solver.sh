@@ -13,11 +13,15 @@ sudo apt install git g++ -y &> /dev/null
 
 echo "Done!"
 sleep 2
-echo "Downloading source code.."
+echo "Downloading source codes.."
 
 git clone https://github.com/eWillyo/ExpressionParser &> /dev/null
 
 cd ExpressionParser
+
+echo "Done!"
+sleep 2
+echo "Downloading libraries.."
 
 git clone https://github.com/g-truc/glm &> /dev/null
 

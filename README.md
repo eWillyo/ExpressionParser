@@ -25,7 +25,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
  
  
   * Custom defined functions
-  * Optimize code.
+  * Optimize code
  
  
  # Examples

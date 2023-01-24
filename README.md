@@ -13,8 +13,8 @@ The only library which this project depends on (except STL) is GLM [https://gith
  # NEW: 
  
  
-  * Fixed few bugs and added support for basic vector operations.
-  * Added basic support for matrices.
+  * Fixed few bugs and added support for basic vector operations
+  * Added basic support for matrices
   * Added few new operations (modulo, factorial, ...)
   * Better result formatting (Eg. "9876543211.09879" -> "9,876,543,211.098789")
   * Added rand() function (range: 0..999)

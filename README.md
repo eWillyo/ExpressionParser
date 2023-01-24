@@ -40,7 +40,6 @@ The only library which this project depends on (except STL) is GLM [https://gith
           Result: -1
           
           Enter expression: a = 6.66
-          Result: 0
           Enter expression: 3 + (a - 7)^4
           Result: 3.01336
           
@@ -54,16 +53,12 @@ The only library which this project depends on (except STL) is GLM [https://gith
           Result: 9
           
           Enter expression: v1 = vec3(1,0,0)
-          Result: 0
           Enter expression: v2 = vec3(0,2,0)
-          Result: 0
           Enter expression: v2 = normalize(v2)
-          Result: 0
           Enter expression: DEG(acos(dot(v1,v2)))
           Result: 90
           
           Enter expression: t = rotate(translate(mat4(), vec3(10,10,10)), RAD(90), vec3(0,1,0))
-          Result: 0
           Enter expression: t * vec4(6,6,6,1)
           Result: ( 16, 16, 4, 1 )
           

@@ -24,6 +24,9 @@ int main()
 			Math_solver::Parser p(inputline);
 			Math_solver::value_t value = p.Evaluate();
 
+			if (!p.IsResult())
+				continue;
+
 			if (value.is_mat())
 				std::cout << "Result: " << value.mat.to_str(PRECISION) << std::endl;
 			else

@@ -39,6 +39,8 @@ namespace Math_solver {
 
 		static std::map<std::string, std::string> variables;
 
+		bool is_result_;
+
 	public:
 		Parser(const std::string& program)
 			: program_(program)
@@ -48,6 +50,8 @@ namespace Math_solver {
 
 		const value_t Evaluate();
 		const value_t Evaluate(const std::string& program);
+
+		bool IsResult() const { return is_result_; }
 
 	private:
 		void AddCommonVariables();

@@ -268,7 +268,7 @@ namespace Math_solver {
 			case 4:
 				result.vec.set_vec4(glm::mix(first.vec.to_vec4(), second.vec.to_vec4(), third.vec.to_scalar()));
 				break;
-			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong n-dimensional vectors");
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong n-dimensional vector");
 			}
 
 			return result;
@@ -279,7 +279,7 @@ namespace Math_solver {
 			if (!first.is_mat())
 				Throw_error(__FILE__, __LINE__, __func__, "First parameter must be 4x4 matrix");
 			if (second.is_mat() || second.vec.get_num_dims() != 3)
-				Throw_error(__FILE__, __LINE__, __func__, "Wrong second parameter");
+				Throw_error(__FILE__, __LINE__, __func__, "Second parameter must be 3D vector");
 
 			result.mat.set_mat4(glm::scale((glm::mat4)first.mat.to_mat4(), (glm::vec3)second.vec.to_vec3()));
 
@@ -339,7 +339,7 @@ namespace Math_solver {
 			fourth = expression4->value();
 
 			if (first.is_mat() || second.is_mat() || third.is_mat() || fourth.is_mat())
-				Throw_error(__FILE__, __LINE__, __func__, "None of parameters can't be matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "None of the parameters can't be matrix");
 			if (first.vec.get_num_dims() != 1 ||
 				second.vec.get_num_dims() != 1 ||
 				third.vec.get_num_dims() != 1 ||
@@ -360,7 +360,7 @@ namespace Math_solver {
 			fourth = expression4->value();
 
 			if (first.is_mat() || second.is_mat() || third.is_mat() || fourth.is_mat())
-				Throw_error(__FILE__, __LINE__, __func__, "None of parameters can't be matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "None of the parameters can't be matrix");
 			if (first.vec.get_num_dims() != 1 ||
 				second.vec.get_num_dims() != 1 ||
 				third.vec.get_num_dims() != 1 ||

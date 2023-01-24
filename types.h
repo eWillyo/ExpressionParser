@@ -1,9 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include <string.h>
-#include <stdexcept>
-
 #include <math.h>
 
 #define GLM_FORCE_RADIANS

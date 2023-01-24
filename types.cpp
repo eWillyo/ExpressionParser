@@ -5,7 +5,7 @@
 
 #include <sstream>
 #include <iostream>
-#include <iomanip>
+//#include <iomanip>
 
 
 namespace Math_solver {
@@ -183,6 +183,9 @@ namespace Math_solver {
 			}
 		}
 
+		lnumdims = left->value().mat.get_num_dims();
+		rnumdims = right->value().mat.get_num_dims();
+
 		if (leftValue.is_mat() && rightValue.is_mat()) // matrices
 		{
 			if (lnumdims == rnumdims) {
@@ -195,6 +198,9 @@ namespace Math_solver {
 			else
 				Throw_error(__FILE__, __LINE__, __func__, "Different bases");
 		}
+
+		lnumdims = left->value().mat.get_num_dims();
+		rnumdims = right->value().vec.get_num_dims();
 
 		if (leftValue.is_mat() && !rightValue.is_mat()) // matrix-vector
 		{

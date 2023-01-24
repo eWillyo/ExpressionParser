@@ -53,7 +53,7 @@ namespace Math_solver {
 
 				if (type_ == VARIABLE_SUBSTITUTION) {
 					if (word_ == variableName) {
-						Print_info("Cyclic assigment: %s", variable_value);
+						Print_info("Cyclic assigment: %s", variable_value.c_str());
 						SubstituteVariable(variableName, variable_value, before);
 					}
 				}
@@ -87,7 +87,7 @@ namespace Math_solver {
 			auto end = start + variable_length;
 			program_copy.replace(start, end, variables[variableName]);
 
-			Print_info("REPLACING: %s, %s", variableName, variables[variableName]);
+			Print_info("REPLACING: %s, %s", variableName.c_str(), variables[variableName].c_str());
 
 			program = program_copy;
 			pWord_ = program.c_str();
@@ -272,7 +272,7 @@ namespace Math_solver {
 			std::istringstream is(word_);
 
 			is >> value_temp_[dim_row_index_];
-			value_ = value_t(value_temp_, max_dim_);// fill_value_vec(max_dim_, value_temp_);
+			value_ = value_t(value_temp_, max_dim_);
 
 			if (is.fail() || !is.eof())
 				Throw_error(__FILE__, __LINE__, __func__, "Bad numeric literal: %s", word_.c_str());
@@ -376,7 +376,7 @@ namespace Math_solver {
 			{
 				++dim_row_index_;
 				if (dim_row_index_ == max_dim_)
-					Throw_error(__FILE__, __LINE__, __func__, "Unexpected dimension index");
+					Throw_error(__FILE__, __LINE__, __func__, "Too much dimensions");
 			}
 			else
 				Throw_error(__FILE__, __LINE__, __func__, "Unexpected character: \",\"");
@@ -676,8 +676,10 @@ namespace Math_solver {
 		// substitute variables
 		CheckVariables();
 
-		if (type_ == VARIABLE_ASSIGN)
+		if (type_ == VARIABLE_ASSIGN) {
+			is_result_ = false;
 			return value_t();
+		}
 
 		pWord_ = program_.c_str();
 		type_ = NONE;
@@ -693,6 +695,7 @@ namespace Math_solver {
 		if (type_ != END)
 			Throw_error(__FILE__, __LINE__, __func__, "Unexpected text at the end of expression: %s", pWordStart_);
 
+		is_result_ = true;
 		return nodes.back()->value();
 	}
 

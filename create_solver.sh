@@ -33,7 +33,7 @@ g++ -Wall -DNDEBUG -I./glm config.h constants.h error.h error.cpp functions.h fu
 
 echo "Done!"
 sleep 2
-echo "Create symlink.."
+echo "Creating symlink.."
 
 chmod +x math_solver
 ln -s ExpressionParser/math_solver $HOME/ &>/dev/null

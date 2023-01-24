@@ -248,4 +248,4 @@ namespace Math_solver {
 
 }
 
-#endif
+#endif // !TYPES_H

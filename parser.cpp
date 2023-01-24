@@ -554,6 +554,11 @@ namespace Math_solver {
 			ExecuteFourParameterFunction(ORTHO_PROJ_FN);
 			break;
 		}
+		case RAND_FN:
+		{
+			ExecuteOneParameterFunction(RAND_FN);
+			break;
+		}
 		default:
 			throw std::runtime_error("Unexpected token: " + word_);
 		}

@@ -37,7 +37,8 @@ namespace Math_solver {
 		{ "translate", TokenType::TRANSLATE_FN },
 		{ "invtranspose", TokenType::INVERSE_TRANSPOSE_FN },
 		{ "perspective", TokenType::PERSPECTIVE_PROJ_FN },
-		{ "ortho", TokenType::ORTHO_PROJ_FN }
+		{ "ortho", TokenType::ORTHO_PROJ_FN },
+		{ "rand", TokenType::RAND_FN}
 	};
 
 	TokenType CheckFunction(std::string name, bool verbose)
@@ -195,6 +196,11 @@ namespace Math_solver {
 			if (verbose)
 				std::cout << "ORTHO PROJECTION function" << std::endl;
 			return TokenType(ORTHO_PROJ_FN);
+
+		case TokenType::RAND_FN:
+			if (verbose)
+				std::cout << "RAND function" << std::endl;
+			return TokenType(RAND_FN);
 
 		default:
 			if (verbose)

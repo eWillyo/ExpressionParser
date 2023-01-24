@@ -41,6 +41,16 @@ namespace Math_solver {
 			throw std::runtime_error("Parameter must be integer number greater than zero");
 	}
 
+	double Random(double value)
+	{
+		if (ceil(value) == value && value >= 0 && value < RANDOM_MAX) // integer
+		{
+			return rand() % (unsigned int)value;
+		}
+		else
+			throw std::runtime_error("Parameter must be integer number in range 0..999");
+	}
+
 	std::string Format_number(double value, unsigned int precision)
 	{
 		value = RoundOff(value, precision);
@@ -317,7 +327,7 @@ namespace Math_solver {
 				second.vec.get_num_dims() != 1 ||
 				third.vec.get_num_dims() != 1 ||
 				fourth.vec.get_num_dims() != 1)
-				throw std::runtime_error("All parameters have to be scalar");
+				throw std::runtime_error("All parameters must be scalar");
 
 			result.mat.set_mat4(glm::perspective(
 				first.vec.to_scalar(),
@@ -338,13 +348,24 @@ namespace Math_solver {
 				second.vec.get_num_dims() != 1 ||
 				third.vec.get_num_dims() != 1 ||
 				fourth.vec.get_num_dims() != 1)
-				throw std::runtime_error("All parameters have to be scalar");
+				throw std::runtime_error("All parameters must be scalar");
 
 			result.mat.set_mat4(glm::ortho(
 				first.vec.to_scalar(),
 				second.vec.to_scalar(),
 				third.vec.to_scalar(),
 				fourth.vec.to_scalar()));
+
+			return result;
+		case RAND_FN:
+			first = expression1->value();
+
+			if (first.is_mat())
+				throw std::runtime_error("Parameter can't be matrix");
+			if (first.vec.get_num_dims() != 1)
+				throw std::runtime_error("Parameter must be scalar");
+
+			result.vec.set_scalar(Random(first.vec.to_scalar()));
 
 			return result;
 		default:

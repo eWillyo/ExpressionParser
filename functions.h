@@ -43,6 +43,7 @@ namespace Math_solver {
 		INVERSE_TRANSPOSE_FN,
 		PERSPECTIVE_PROJ_FN = 34,
 		ORTHO_PROJ_FN,
+		RAND_FN,
 		PLUS = '+',
 		MINUS = '-',
 		MULTIPLY = '*',
@@ -60,4 +61,4 @@ namespace Math_solver {
 
 }
 
-#endif
+#endif // !FUNCTIONS_H

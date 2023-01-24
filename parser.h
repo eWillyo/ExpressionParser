@@ -11,6 +11,7 @@
 #include "operations.h"
 #include "functions.h"
 #include "types.h"
+#include "error.h"
 
 
 namespace Math_solver {
@@ -74,7 +75,7 @@ namespace Math_solver {
 			{
 				std::ostringstream s;
 				s << "'" << static_cast <char>(wanted) << "' expected.";
-				throw std::runtime_error(s.str());
+				Throw_error(__FILE__, __LINE__, __func__, s.str().c_str());
 			}
 		}
 	};

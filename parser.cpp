@@ -31,8 +31,7 @@ namespace Math_solver {
 				SubstituteVariable(word_, program_, before);
 		}
 
-		if (VERBOSE)
-			std::cout << "Expression: " << program_ << std::endl;
+		Print_info("Expression: %s", program_.c_str());
 	}
 
 	bool Parser::AssignVariable(std::string variableName)
@@ -54,8 +53,7 @@ namespace Math_solver {
 
 				if (type_ == VARIABLE_SUBSTITUTION) {
 					if (word_ == variableName) {
-						if (VERBOSE)
-							std::cout << "Cyclic assigment: " << variable_value << std::endl;
+						Print_info("Cyclic assigment: %s", variable_value);
 						SubstituteVariable(variableName, variable_value, before);
 					}
 				}
@@ -65,8 +63,7 @@ namespace Math_solver {
 			type_ = VARIABLE_ASSIGN;
 			variables[variableName] = variable_value;
 
-			if (VERBOSE)
-				std::cout << "VARIABLE_ASSIGNED(" << variableName << ": " << variable_value << ")" << std::endl;
+			Print_info("VARIABLE_ASSIGNED(%s: %s)", variableName.c_str(), variable_value.c_str());
 
 			return true;
 		}
@@ -90,8 +87,7 @@ namespace Math_solver {
 			auto end = start + variable_length;
 			program_copy.replace(start, end, variables[variableName]);
 
-			if (VERBOSE)
-				std::cout << "REPLACING: " << variableName << ", " << variables[variableName] << std::endl;
+			Print_info("REPLACING: %s, %s", variableName, variables[variableName]);
 
 			program = program_copy;
 			pWord_ = program.c_str();
@@ -243,7 +239,7 @@ namespace Math_solver {
 
 		if (*pWord_ == 0 &&
 			type_ == END)
-			throw std::runtime_error("Unexpected end of expression.");
+			Throw_error(__FILE__, __LINE__, __func__, "Unexpected end of expression.");
 
 		unsigned char cFirstCharacter = *pWord_;
 
@@ -251,8 +247,7 @@ namespace Math_solver {
 		{
 			word_ = "<End of expression>";
 
-			if (VERBOSE)
-				std::cout << "END" << std::endl;
+			Print_info("END");
 
 			return type_ = END;
 		}
@@ -280,10 +275,9 @@ namespace Math_solver {
 			value_ = value_t(value_temp_, max_dim_);// fill_value_vec(max_dim_, value_temp_);
 
 			if (is.fail() || !is.eof())
-				throw std::runtime_error("Bad numeric literal: " + word_);
+				Throw_error(__FILE__, __LINE__, __func__, "Bad numeric literal: %s", word_.c_str());
 
-			if (VERBOSE)
-				std::cout << "SCALAR (" << value_.vec.to_vec4()[dim_row_index_] << ") [" << dim_row_index_ << "]" << std::endl;
+			Print_info("SCALAR (%.1f) [%d]", value_.vec.to_vec4()[dim_row_index_], dim_row_index_);
 
 			return type_ = SCALAR;
 		}
@@ -303,8 +297,7 @@ namespace Math_solver {
 			word_ = std::string(pWordStart_, 1);
 			++pWord_;
 
-			if (VERBOSE)
-				std::cout << cFirstCharacter << std::endl;
+			Print_info("%c", cFirstCharacter);
 
 			return type_ = TokenType(cFirstCharacter);
 		}
@@ -315,10 +308,10 @@ namespace Math_solver {
 			{
 				std::ostringstream s;
 				s << "Unexpected character (decimal " << int(cFirstCharacter) << ")";
-				throw std::runtime_error(s.str());
+				Throw_error(__FILE__, __LINE__, __func__, s.str().c_str());
 			}
 			else
-				throw std::runtime_error("Unexpected character: " + std::string(1, cFirstCharacter));
+				Throw_error(__FILE__, __LINE__, __func__, "Unexpected character: %c", cFirstCharacter);
 		}
 		else {
 
@@ -331,7 +324,7 @@ namespace Math_solver {
 
 			// check functions
 			TokenType t;
-			if ((t = CheckFunction(word_, VERBOSE)) != TokenType(NONE))
+			if ((t = CheckFunction(word_)) != TokenType(NONE))
 				return type_ = t;
 
 			// check variables
@@ -349,8 +342,10 @@ namespace Math_solver {
 			if (search != variables.end())  // substitution
 				return type_ = TokenType(VARIABLE_SUBSTITUTION);
 
-			throw std::runtime_error("Unexpected alphanumeric characters: " + word_);
+			Throw_error(__FILE__, __LINE__, __func__, "Unexpected alphanumeric characters: %s", word_.c_str());
 		}
+
+		return TokenType::NONE;
 	}
 
 	void Parser::Primary(const bool get)
@@ -381,10 +376,10 @@ namespace Math_solver {
 			{
 				++dim_row_index_;
 				if (dim_row_index_ == max_dim_)
-					throw std::runtime_error("Unexpected dimension index");
+					Throw_error(__FILE__, __LINE__, __func__, "Unexpected dimension index");
 			}
 			else
-				throw std::runtime_error("Unexpected character: \",\"");
+				Throw_error(__FILE__, __LINE__, __func__, "Unexpected character: \",\"");
 			break;
 		}
 		case LHPAREN:
@@ -560,7 +555,7 @@ namespace Math_solver {
 			break;
 		}
 		default:
-			throw std::runtime_error("Unexpected token: " + word_);
+			Throw_error(__FILE__, __LINE__, __func__, "Unexpected token: %s", word_.c_str());
 		}
 	}
 
@@ -593,7 +588,7 @@ namespace Math_solver {
 					GetToken(true);
 				}
 				else
-					throw std::runtime_error("Value must be scalar");
+					Throw_error(__FILE__, __LINE__, __func__, "Value must be scalar");
 
 				break;
 			}
@@ -626,7 +621,7 @@ namespace Math_solver {
 				Power(true);
 
 				if (nodes.back()->value().vec.to_vec4()[0] == 0.0)
-					throw std::runtime_error("Division by zero!");
+					Throw_error(__FILE__, __LINE__, __func__, "Division by zero!");
 
 				nodes.push_back(new OperNode('/', temp, nodes.back()));
 				break;
@@ -696,7 +691,7 @@ namespace Math_solver {
 		AddSubtract(true);
 
 		if (type_ != END)
-			throw std::runtime_error("Unexpected text at the end of expression " + std::string(pWordStart_));
+			Throw_error(__FILE__, __LINE__, __func__, "Unexpected text at the end of expression: %s", pWordStart_);
 
 		return nodes.back()->value();
 	}

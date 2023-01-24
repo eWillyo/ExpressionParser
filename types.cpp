@@ -1,6 +1,7 @@
 #include "types.h"
 #include "operations.h"
 #include "config.h"
+#include "error.h"
 
 #include <sstream>
 #include <iostream>
@@ -74,12 +75,12 @@ namespace Math_solver {
 		value_t result;
 
 		if (!left.is_mat())
-			throw std::runtime_error("Bad operand order");
+			Throw_error(__FILE__, __LINE__, __func__, "Bad operand order");
 
 		if (right.is_mat())
 		{
 			if (left.mat.get_num_dims() != right.mat.get_num_dims())
-				throw std::runtime_error("Different bases");
+				Throw_error(__FILE__, __LINE__, __func__, "Different bases");
 
 			switch (right.mat.get_num_dims())
 			{
@@ -93,13 +94,13 @@ namespace Math_solver {
 				result.mat.set_mat4(left.mat.to_mat4() * right.mat.to_mat4());
 				break;
 			default:
-				throw std::runtime_error("Wrong number of dimensions");
+				Throw_error(__FILE__, __LINE__, __func__, "Wrong number of dimensions");
 			}
 		}
 		else // right is vector
 		{
 			if (left.mat.get_num_dims() != right.vec.get_num_dims())
-				throw std::runtime_error("Different bases");
+				Throw_error(__FILE__, __LINE__, __func__, "Different bases");
 
 			switch (right.vec.get_num_dims())
 			{
@@ -113,7 +114,7 @@ namespace Math_solver {
 				result.vec.set_vec4(left.mat.to_mat4() * right.vec.to_vec4());
 				break;
 			default:
-				throw std::runtime_error("Wrong number of dimensions");
+				Throw_error(__FILE__, __LINE__, __func__, "Wrong number of dimensions");
 			}
 		}
 
@@ -144,9 +145,9 @@ namespace Math_solver {
 						ceil(rightValue.vec.to_vec4()[0]) == rightValue.vec.to_vec4()[0]) // check if integer
 						return value_t(glm::dvec4((long)leftValue.vec.to_vec4()[0] % (long)rightValue.vec.to_vec4()[0]));
 					else
-						throw std::runtime_error("Both operand must be integer");
+						Throw_error(__FILE__, __LINE__, __func__, "Both operand must be integer");
 				case '^': return value_t(glm::dvec4(pow(leftValue.vec.to_vec4()[0], rightValue.vec.to_vec4()[0])));
-				default: throw std::runtime_error("Unknown scalar operator: " + oper);
+				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown scalar operator: %c", oper);
 				}
 			}
 			else if ((lnumdims == 1 && rnumdims != 1)) // one scalar, one vector
@@ -157,7 +158,7 @@ namespace Math_solver {
 				case '-': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b - a; });
 				case '*': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return a * b; });
 				case '/': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b / a; });
-				default: throw std::runtime_error("Unknown scalar-vector operator: " + oper);
+				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown scalar-vector operator: %c", oper);
 				}
 			}
 			else if ((lnumdims != 1 && rnumdims == 1)) // one vector, one scalar
@@ -168,7 +169,7 @@ namespace Math_solver {
 				case '-': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a - b; });
 				case '*': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a * b; });
 				case '/': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a / b; });
-				default: throw std::runtime_error("Unknown vector-scalar operator: " + oper);
+				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown vector-scalar operator: %c", oper);
 				}
 			}
 			else if (lnumdims == rnumdims) // two (same-dimensional) vectors
@@ -177,7 +178,7 @@ namespace Math_solver {
 				{
 				case '+': return Do_oper(leftValue, rightValue, [](auto a, auto b) {return a + b; });
 				case '-': return Do_oper(leftValue, rightValue, [](auto a, auto b) {return a - b; });
-				default: throw std::runtime_error("Unknown vector-vector operator: " + oper);
+				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown vector-vector operator: %c", oper);
 				}
 			}
 		}
@@ -188,11 +189,11 @@ namespace Math_solver {
 				switch (oper)
 				{
 				case '*': return (leftValue * rightValue);
-				default: throw std::runtime_error("Unknown matrix-matrix operator: " + oper);
+				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown matrix-matrix operator: %c", oper);
 				}
 			}
 			else
-				throw std::runtime_error("Different bases");
+				Throw_error(__FILE__, __LINE__, __func__, "Different bases");
 		}
 
 		if (leftValue.is_mat() && !rightValue.is_mat()) // matrix-vector
@@ -201,14 +202,16 @@ namespace Math_solver {
 				switch (oper)
 				{
 				case '*': return (leftValue * rightValue);
-				default: throw std::runtime_error("Unknown matrix-vector operator: " + oper);
+				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown matrix-vector operator: %c", oper);
 				}
 			}
 			else
-				throw std::runtime_error("Different bases");
+				Throw_error(__FILE__, __LINE__, __func__, "Different bases");
 		}
 
-		throw std::runtime_error("Wrong operation");
+		Throw_error(__FILE__, __LINE__, __func__, "Wrong operation");
+
+		return result;
 	}
 
 	value_t FuncNode::value()

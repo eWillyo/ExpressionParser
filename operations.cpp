@@ -1,6 +1,7 @@
 #include "constants.h"
 #include "types.h"
 #include "operations.h"
+#include "error.h"
 
 #include <random>
 
@@ -50,7 +51,9 @@ namespace Math_solver {
 			return result;
 		}
 		else
-			throw std::runtime_error("Parameter must be integer number greater than zero");
+			Throw_error(__FILE__, __LINE__, __func__, "Parameter must be integer number greater than zero");
+
+		return 0;
 	}
 
 	double Random(double value)
@@ -60,7 +63,9 @@ namespace Math_solver {
 			return (double)(dist_in_range(rng) % (unsigned int)value);
 		}
 		else
-			throw std::runtime_error("Parameter must be integer number in range 0..999");
+			Throw_error(__FILE__, __LINE__, __func__, "Parameter must be integer number in range 0..999");
+
+		return 0;
 	}
 
 	std::string Format_number(double value, unsigned int precision)
@@ -186,7 +191,7 @@ namespace Math_solver {
 			case 4:
 				result.vec.set_scalar(glm::length(expression1->value().vec.to_vec4()));
 				break;
-			default: throw std::runtime_error("Wrong n-dimensional vector");
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong n-dimensional vector");
 			}
 
 			return result;
@@ -202,7 +207,7 @@ namespace Math_solver {
 			case 4:
 				result.vec.set_vec4(glm::normalize(expression1->value().vec.to_vec4()));
 				break;
-			default: throw std::runtime_error("Wrong n-dimensional vector");
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong n-dimensional vector");
 			}
 
 			return result;
@@ -211,7 +216,7 @@ namespace Math_solver {
 			second = expression2->value();
 
 			if (first.vec.get_num_dims() != second.vec.get_num_dims())
-				throw std::runtime_error("Different dimension count at n-dimensional function");
+				Throw_error(__FILE__, __LINE__, __func__, "Different dimension count at n-dimensional function");
 
 			switch (first.vec.get_num_dims())
 			{
@@ -224,7 +229,7 @@ namespace Math_solver {
 			case 4:
 				result.vec.set_scalar(glm::dot(first.vec.to_vec4(), second.vec.to_vec4()));
 				break;
-			default: throw std::runtime_error("Wrong n-dimensional vector");
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong n-dimensional vector");
 			}
 
 			return result;
@@ -233,7 +238,7 @@ namespace Math_solver {
 			second = expression2->value();
 
 			if ((first.vec.get_num_dims() != 3) && (second.vec.get_num_dims() != 3))
-				throw std::runtime_error("Different dimension count at n-dimensional function");
+				Throw_error(__FILE__, __LINE__, __func__, "Different dimension count at n-dimensional function");
 
 			result.vec.set_vec3(glm::cross(first.vec.to_vec3(), second.vec.to_vec3()));
 
@@ -244,10 +249,10 @@ namespace Math_solver {
 			third = expression3->value();
 
 			if (first.vec.get_num_dims() != second.vec.get_num_dims())
-				throw std::runtime_error("Different dimension count at n-dimensional function");
+				Throw_error(__FILE__, __LINE__, __func__, "Different dimension count at n-dimensional function");
 
 			if (third.vec.get_num_dims() != 1)
-				throw std::runtime_error("Third parameter of function must be scalar value");
+				Throw_error(__FILE__, __LINE__, __func__, "Third parameter of function must be scalar value");
 
 			switch (first.vec.get_num_dims())
 			{
@@ -263,7 +268,7 @@ namespace Math_solver {
 			case 4:
 				result.vec.set_vec4(glm::mix(first.vec.to_vec4(), second.vec.to_vec4(), third.vec.to_scalar()));
 				break;
-			default: throw std::runtime_error("Wrong n-dimensional vectors");
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong n-dimensional vectors");
 			}
 
 			return result;
@@ -272,9 +277,9 @@ namespace Math_solver {
 			second = expression2->value();
 
 			if (!first.is_mat())
-				throw std::runtime_error("First parameter must be 4x4 matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "First parameter must be 4x4 matrix");
 			if (second.is_mat() || second.vec.get_num_dims() != 3)
-				throw std::runtime_error("Wrong second parameter");
+				Throw_error(__FILE__, __LINE__, __func__, "Wrong second parameter");
 
 			result.mat.set_mat4(glm::scale((glm::mat4)first.mat.to_mat4(), (glm::vec3)second.vec.to_vec3()));
 
@@ -285,11 +290,11 @@ namespace Math_solver {
 			third = expression3->value();
 
 			if (!first.is_mat() || first.mat.get_num_dims() != 4)
-				throw std::runtime_error("First parameter must be 4x4 matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "First parameter must be 4x4 matrix");
 			if (second.vec.get_num_dims() != 1)
-				throw std::runtime_error("Second parameter must be scalar");
+				Throw_error(__FILE__, __LINE__, __func__, "Second parameter must be scalar");
 			if (third.is_mat() || third.vec.get_num_dims() != 3)
-				throw std::runtime_error("Third parameter must be 3D vector");
+				Throw_error(__FILE__, __LINE__, __func__, "Third parameter must be 3D vector");
 
 			result.mat.set_mat4(glm::rotate(first.mat.to_mat4(), second.vec.to_scalar(), third.vec.to_vec3()));
 
@@ -299,9 +304,9 @@ namespace Math_solver {
 			second = expression2->value();
 
 			if (!first.is_mat() || first.mat.get_num_dims() != 4)
-				throw std::runtime_error("First parameter must be 4x4 matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "First parameter must be 4x4 matrix");
 			if (second.is_mat() || second.vec.get_num_dims() != 3)
-				throw std::runtime_error("Second parameter must be 3D vector");
+				Throw_error(__FILE__, __LINE__, __func__, "Second parameter must be 3D vector");
 
 			result.mat.set_mat4(glm::translate(first.mat.to_mat4(), second.vec.to_vec3()));
 
@@ -310,7 +315,7 @@ namespace Math_solver {
 			first = expression1->value();
 
 			if (!first.is_mat())
-				throw std::runtime_error("Parameter must be matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "Parameter must be matrix");
 
 			switch (first.vec.get_num_dims())
 			{
@@ -323,7 +328,7 @@ namespace Math_solver {
 			case 4:
 				result.mat.set_mat4(glm::inverseTranspose(first.mat.to_mat4()));
 				break;
-			default: throw std::runtime_error("Wrong n-dimensional vectors");
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong n-dimensional vectors");
 			}
 
 			return result;
@@ -334,12 +339,12 @@ namespace Math_solver {
 			fourth = expression4->value();
 
 			if (first.is_mat() || second.is_mat() || third.is_mat() || fourth.is_mat())
-				throw std::runtime_error("None of parameters can't be matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "None of parameters can't be matrix");
 			if (first.vec.get_num_dims() != 1 ||
 				second.vec.get_num_dims() != 1 ||
 				third.vec.get_num_dims() != 1 ||
 				fourth.vec.get_num_dims() != 1)
-				throw std::runtime_error("All parameters must be scalar");
+				Throw_error(__FILE__, __LINE__, __func__, "All parameters must be scalar");
 
 			result.mat.set_mat4(glm::perspective(
 				first.vec.to_scalar(),
@@ -355,12 +360,12 @@ namespace Math_solver {
 			fourth = expression4->value();
 
 			if (first.is_mat() || second.is_mat() || third.is_mat() || fourth.is_mat())
-				throw std::runtime_error("None of parameters can't be matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "None of parameters can't be matrix");
 			if (first.vec.get_num_dims() != 1 ||
 				second.vec.get_num_dims() != 1 ||
 				third.vec.get_num_dims() != 1 ||
 				fourth.vec.get_num_dims() != 1)
-				throw std::runtime_error("All parameters must be scalar");
+				Throw_error(__FILE__, __LINE__, __func__, "All parameters must be scalar");
 
 			result.mat.set_mat4(glm::ortho(
 				first.vec.to_scalar(),
@@ -373,16 +378,18 @@ namespace Math_solver {
 			first = expression1->value();
 
 			if (first.is_mat())
-				throw std::runtime_error("Parameter can't be matrix");
+				Throw_error(__FILE__, __LINE__, __func__, "Parameter can't be matrix");
 			if (first.vec.get_num_dims() != 1)
-				throw std::runtime_error("Parameter must be scalar");
+				Throw_error(__FILE__, __LINE__, __func__, "Parameter must be scalar");
 
 			result.vec.set_scalar(Random(first.vec.to_scalar()));
 
 			return result;
 		default:
-			throw std::runtime_error("Unknown function: " + func);
+			Throw_error(__FILE__, __LINE__, __func__, "Unknown function: %d", func);
 		}
+
+		return result;
 	}
 
 }

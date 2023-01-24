@@ -57,7 +57,7 @@ namespace Math_solver {
 	};
 
 
-	TokenType CheckFunction(std::string name, bool verbose);
+	TokenType CheckFunction(std::string name);
 
 }
 

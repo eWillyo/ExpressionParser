@@ -32,7 +32,7 @@ sleep 2
 echo "Create symlink.."
 
 chmod +x math_solver
-ln -s math_solver $HOME/ &>/dev/null
+ln -s ExpressionParser/math_solver $HOME/ &>/dev/null
 
 echo "Done!"
 sleep 2

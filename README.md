@@ -17,6 +17,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
   * Added basic support for matrices.
   * Added few new operations (modulo, factorial, ...)
   * Better result formatting (Eg. "9876543211.09879" -> "9,876,543,211.098789")
+  * Added rand() function (range: 0..999)
  
  
  # TODO: 
@@ -30,8 +31,8 @@ The only library which this project depends on (except STL) is GLM [https://gith
           Enter expression: 9 / 8
           Result: 1.125
           
-          Enter expression: sin(RAD(90))
-          Result: 1
+          Enter expression: sin(RAD(rand(360)))
+          Result: 0.529919
 
           Enter expression: cos(pi)
           Result: -1

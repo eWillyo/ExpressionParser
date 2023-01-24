@@ -15,11 +15,11 @@ echo "Done!"
 sleep 2
 echo "Downloading source code.."
 
-git clone https://github.com/eWillyo/ExpressionParser &> /dev/null .
+git clone https://github.com/eWillyo/ExpressionParser &> /dev/null
 
 cd ExpressionParser
 
-git clone https://github.com/g-truc/glm &> /dev/null .
+git clone https://github.com/g-truc/glm &> /dev/null
 
 echo "Done!"
 sleep 2

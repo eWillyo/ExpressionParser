@@ -154,8 +154,6 @@ namespace Math_solver {
 			{
 				switch (oper)
 				{
-				case '+': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return a + b; });
-				case '-': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b - a; });
 				case '*': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return a * b; });
 				case '/': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b / a; });
 				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown scalar-vector operator: %c", oper);
@@ -165,8 +163,6 @@ namespace Math_solver {
 			{
 				switch (oper)
 				{
-				case '+': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a + b; });
-				case '-': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a - b; });
 				case '*': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a * b; });
 				case '/': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a / b; });
 				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown vector-scalar operator: %c", oper);

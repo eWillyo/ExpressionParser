@@ -7,9 +7,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
-
 #include "constants.h"
 #include "operations.h"
 #include "functions.h"
@@ -45,7 +42,6 @@ namespace Math_solver {
 		Parser(const std::string& program)
 			: program_(program)
 		{
-			srand((unsigned int)time(NULL)); // init random seed for rand() function 
 			AddCommonVariables();
 		}
 

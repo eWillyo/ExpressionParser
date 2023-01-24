@@ -11,6 +11,7 @@ namespace Math_solver {
 	double Degrees(double radians);
 	double RoundOff(double value, unsigned int precision);
 	double Factorial(double value);
+
 	double Random(double value);
 
 	std::string Format_number(double value, unsigned int precision);

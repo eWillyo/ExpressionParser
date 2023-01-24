@@ -2,12 +2,24 @@
 #include "types.h"
 #include "operations.h"
 
+#include <random>
+
 #include <vector>
 #include <iostream>
 #include <algorithm>
 
 
 namespace Math_solver {
+
+	// RAND() 
+	std::random_device dev;
+	std::mt19937 rng(dev());
+
+	// create distributions
+	std::uniform_int_distribution<std::mt19937::result_type> dist_in_range(0, RANDOM_MAX); // distribution in range [0, RANDOM_MAX]
+	//std::uniform_int_distribution<std::mt19937::result_type> dist_in_rand_max;
+	//std::normal_distribution<double> normal_dist(mean, stddeviation);  // N(mean, stddeviation)
+	// RAND() 
 
 	double Radians(double degrees)
 	{
@@ -30,7 +42,7 @@ namespace Math_solver {
 	{
 		if (ceil(value) == value && value > 0) // integer
 		{
-			double result = (double)value;
+			double result = value;
 
 			for (unsigned long i = (unsigned long)(result - 1); i > 0; i--)
 				result *= i;
@@ -45,7 +57,7 @@ namespace Math_solver {
 	{
 		if (ceil(value) == value && value >= 0 && value < RANDOM_MAX) // integer
 		{
-			return rand() % (unsigned int)value;
+			return (double)(dist_in_range(rng) % (unsigned int)value);
 		}
 		else
 			throw std::runtime_error("Parameter must be integer number in range 0..999");

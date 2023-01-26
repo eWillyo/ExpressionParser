@@ -25,6 +25,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
  # TODO: 
  
  
+  * Add matrix-scalar operations
   * Add vector casting
   * Custom defined functions
   * Optimize code

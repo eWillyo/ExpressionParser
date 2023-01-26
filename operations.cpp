@@ -124,7 +124,7 @@ namespace Math_solver {
 		return value_t(result_temp, value.vec.get_num_dims());
 	}
 
-	value_t Do_scalar(value_t lvalue, value_t rvalue, double (*fnc)(double, double))
+	value_t Do_vector_scalar(value_t lvalue, value_t rvalue, double (*fnc)(double, double))
 	{
 		glm::dvec4 result_temp(0);
 
@@ -134,12 +134,23 @@ namespace Math_solver {
 		return value_t(result_temp, lvalue.vec.get_num_dims());
 	}
 
-	value_t Do_oper(value_t lvalue, value_t rvalue, double (*fnc)(double, double))
+	value_t Do_vector_vector(value_t lvalue, value_t rvalue, double (*fnc)(double, double))
 	{
 		glm::dvec4 result_temp(0);
 
 		for (unsigned int i = 0; i < lvalue.vec.get_num_dims(); i++)
 			result_temp[i] = fnc((double)lvalue.vec.to_vec4()[i], (double)rvalue.vec.to_vec4()[i]);
+
+		return value_t(result_temp, lvalue.vec.get_num_dims());
+	}
+
+	value_t Do_matrix_scalar(value_t lvalue, value_t rvalue, double (*fnc)(double, double))
+	{
+		glm::dmat4 result_temp = glm::dmat4(0);
+
+		for (unsigned int i = 0; i < lvalue.mat.get_num_dims(); i++)
+			for (unsigned int j = 0; j < lvalue.mat.get_num_dims(); j++)
+				result_temp[i][j] = fnc((double)lvalue.mat.to_mat4()[i][j], (double)rvalue.vec.to_vec4()[0]);
 
 		return value_t(result_temp, lvalue.vec.get_num_dims());
 	}

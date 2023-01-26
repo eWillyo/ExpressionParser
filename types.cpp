@@ -130,7 +130,7 @@ namespace Math_solver {
 		unsigned int lnumdims = left->value().vec.get_num_dims();
 		unsigned int rnumdims = right->value().vec.get_num_dims();
 
-		if (!leftValue.is_mat() && !rightValue.is_mat())
+		if (!leftValue.is_mat() && !rightValue.is_mat()) // not matrices
 		{
 			if ((lnumdims == 1) && (rnumdims == 1)) // two scalars
 			{
@@ -154,8 +154,10 @@ namespace Math_solver {
 			{
 				switch (oper)
 				{
-				case '*': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return a * b; });
-				case '/': return Do_scalar(rightValue, leftValue, [](auto a, auto b) {return b / a; });
+				case '+': return Do_vector_scalar(rightValue, leftValue, [](auto a, auto b) {return a + b; });
+				case '-': return Do_vector_scalar(rightValue, leftValue, [](auto a, auto b) {return b - a; });
+				case '*': return Do_vector_scalar(rightValue, leftValue, [](auto a, auto b) {return a * b; });
+				case '/': return Do_vector_scalar(rightValue, leftValue, [](auto a, auto b) {return b / a; });
 				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown scalar-vector operator: %c", oper);
 				}
 			}
@@ -163,8 +165,10 @@ namespace Math_solver {
 			{
 				switch (oper)
 				{
-				case '*': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a * b; });
-				case '/': return Do_scalar(leftValue, rightValue, [](auto a, auto b) {return a / b; });
+				case '+': return Do_vector_scalar(leftValue, rightValue, [](auto a, auto b) {return a + b; });
+				case '-': return Do_vector_scalar(leftValue, rightValue, [](auto a, auto b) {return a - b; });
+				case '*': return Do_vector_scalar(leftValue, rightValue, [](auto a, auto b) {return a * b; });
+				case '/': return Do_vector_scalar(leftValue, rightValue, [](auto a, auto b) {return a / b; });
 				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown vector-scalar operator: %c", oper);
 				}
 			}
@@ -172,17 +176,14 @@ namespace Math_solver {
 			{
 				switch (oper)
 				{
-				case '+': return Do_oper(leftValue, rightValue, [](auto a, auto b) {return a + b; });
-				case '-': return Do_oper(leftValue, rightValue, [](auto a, auto b) {return a - b; });
+				case '+': return Do_vector_vector(leftValue, rightValue, [](auto a, auto b) {return a + b; });
+				case '-': return Do_vector_vector(leftValue, rightValue, [](auto a, auto b) {return a - b; });
 				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown vector-vector operator: %c", oper);
 				}
 			}
 		}
 
-		lnumdims = left->value().mat.get_num_dims();
-		rnumdims = right->value().mat.get_num_dims();
-
-		if (leftValue.is_mat() && rightValue.is_mat()) // matrices
+		if (leftValue.is_mat() && rightValue.is_mat()) // matrix-matrix
 		{
 			if (lnumdims == rnumdims) {
 				switch (oper)
@@ -195,16 +196,39 @@ namespace Math_solver {
 				Throw_error(__FILE__, __LINE__, __func__, "Different bases");
 		}
 
-		lnumdims = left->value().mat.get_num_dims();
-		rnumdims = right->value().vec.get_num_dims();
-
-		if (leftValue.is_mat() && !rightValue.is_mat()) // matrix-vector
+		if (leftValue.is_mat() && !rightValue.is_mat()) 
 		{
-			if (lnumdims == rnumdims) {
+			if (lnumdims == rnumdims) { // matrix-vector
 				switch (oper)
 				{
 				case '*': return (leftValue * rightValue);
 				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown matrix-vector operator: %c", oper);
+				}
+			}
+			else if (rnumdims == 1) { // matrix-scalar
+				switch (oper)
+				{
+				case '+': return Do_matrix_scalar(leftValue, rightValue, [](auto a, auto b) {return a + b; });
+				case '-': return Do_matrix_scalar(leftValue, rightValue, [](auto a, auto b) {return a - b; });
+				case '*': return Do_matrix_scalar(leftValue, rightValue, [](auto a, auto b) {return a * b; });
+				case '/': return Do_matrix_scalar(leftValue, rightValue, [](auto a, auto b) {return a / b; });
+				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown matrix-scalar operator: %c", oper);
+				}
+			}
+			else
+				Throw_error(__FILE__, __LINE__, __func__, "Different bases");
+		}
+
+		if (!leftValue.is_mat() && rightValue.is_mat())
+		{
+			if (lnumdims == 1) { // scalar-matrix
+				switch (oper)
+				{
+				case '+': return Do_matrix_scalar(rightValue, leftValue, [](auto a, auto b) {return a + b; });
+				case '-': return Do_matrix_scalar(rightValue, leftValue, [](auto a, auto b) {return b - a; });
+				case '*': return Do_matrix_scalar(rightValue, leftValue, [](auto a, auto b) {return a * b; });
+				case '/': return Do_matrix_scalar(rightValue, leftValue, [](auto a, auto b) {return b / a; });
+				default: Throw_error(__FILE__, __LINE__, __func__, "Unknown scalar-matrix operator: %c", oper);
 				}
 			}
 			else

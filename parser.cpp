@@ -202,7 +202,7 @@ namespace Math_solver {
 			if (type_ == RHPAREN)
 				break;
 
-			AddSubtract(true);
+			AddSubtract(true); // GetToken ->AddSubtract(false) ->analyze "type_" !!!!!!
 		} while (type_ == COMMA);
 
 		nodes.push_back(new NumNode(value_));

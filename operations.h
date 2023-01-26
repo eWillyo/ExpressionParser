@@ -16,8 +16,9 @@ namespace Math_solver {
 	std::string Format_number(double value, unsigned int precision);
 
 	value_t Do_vector(value_t value, double (*fnc)(double));
-	value_t Do_scalar(value_t lvalue, value_t rvalue, double (*fnc)(double, double));
-	value_t Do_oper(value_t lvalue, value_t rvalue, double (*fnc)(double, double));
+	value_t Do_vector_scalar(value_t lvalue, value_t rvalue, double (*fnc)(double, double));
+	value_t Do_vector_vector(value_t lvalue, value_t rvalue, double (*fnc)(double, double));
+	value_t Do_matrix_scalar(value_t lvalue, value_t rvalue, double (*fnc)(double, double));
 
 	value_t Do_func(TokenType func, BaseNode* expression1, BaseNode* expression2, BaseNode* expression3, BaseNode* expression4);
 

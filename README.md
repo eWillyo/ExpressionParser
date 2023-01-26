@@ -19,6 +19,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
   * Better result formatting (Eg. "9876543211.09879" -> "9,876,543,211.098789")
   * Added rand() function (range: 0..999)
   * Better error handling
+  * added hyperbolic functions; matrix casting
  
  
  # TODO: 

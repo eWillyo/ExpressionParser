@@ -18,6 +18,9 @@ namespace Math_solver {
 		SIN_FN,
 		COS_FN,
 		TAN_FN,
+		SINH_FN,
+		COSH_FN,
+		TANH_FN,
 		ASIN_FN,
 		ACOS_FN,
 		ATAN_FN,
@@ -38,10 +41,10 @@ namespace Math_solver {
 		MAT3_FN,
 		MAT4_FN,
 		SCALE_FN,
-		ROTATE_FN,
+		ROTATE_FN = 66,
 		TRANSLATE_FN,
 		INVERSE_TRANSPOSE_FN,
-		PERSPECTIVE_PROJ_FN = 34,
+		PERSPECTIVE_PROJ_FN,
 		ORTHO_PROJ_FN,
 		RAND_FN,
 		PLUS = '+',
@@ -53,7 +56,9 @@ namespace Math_solver {
 		POW = '^',
 		LHPAREN = '(',
 		RHPAREN = ')',
-		COMMA = ','
+		COMMA = ',',
+		BLOCK_START = '{',
+		BLOCK_END = '}'
 	};
 
 

@@ -147,6 +147,7 @@ namespace Math_solver {
 	value_t Do_func(TokenType func, BaseNode* expression1, BaseNode* expression2, BaseNode* expression3, BaseNode* expression4)
 	{
 		value_t result, first, second, third, fourth;
+		unsigned int num_dims;
 
 		switch (func)
 		{
@@ -160,6 +161,12 @@ namespace Math_solver {
 			return Do_vector(expression1->value(), cos);
 		case TAN_FN:
 			return Do_vector(expression1->value(), tan);
+		case SINH_FN:
+			return Do_vector(expression1->value(), sinh);
+		case COSH_FN:
+			return Do_vector(expression1->value(), cosh);
+		case TANH_FN:
+			return Do_vector(expression1->value(), tanh);
 		case ASIN_FN:
 			return Do_vector(expression1->value(), asin);
 		case ACOS_FN:
@@ -269,6 +276,72 @@ namespace Math_solver {
 				result.vec.set_vec4(glm::mix(first.vec.to_vec4(), second.vec.to_vec4(), third.vec.to_scalar()));
 				break;
 			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong n-dimensional vector");
+			}
+
+			return result;
+		case MAT2_FN:
+			first = expression1->value();
+			num_dims = expression1->value().mat.get_num_dims();
+			
+			if (!first.is_mat())
+				Throw_error(__FILE__, __LINE__, __func__, "Parameter must be matrix");
+
+			switch (num_dims)
+			{
+			case 2:
+				result.mat.set_mat2(first.mat.to_mat2());
+				break;
+			case 3:
+				result.mat.set_mat2(first.mat.to_mat3());
+				break;
+			case 4:
+				result.mat.set_mat2(first.mat.to_mat4());
+				break;
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong base of matrix");
+			}
+
+			return result;
+		case MAT3_FN:
+			first = expression1->value();
+			num_dims = expression1->value().mat.get_num_dims();
+
+			if (!first.is_mat())
+				Throw_error(__FILE__, __LINE__, __func__, "Parameter must be matrix");
+
+			switch (num_dims)
+			{
+			case 2:
+				result.mat.set_mat3(first.mat.to_mat2());
+				break;
+			case 3:
+				result.mat.set_mat3(first.mat.to_mat3());
+				break;
+			case 4:
+				result.mat.set_mat3(first.mat.to_mat4());
+				break;
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong base of matrix");
+			}
+
+			return result;
+		case MAT4_FN:
+			first = expression1->value();
+			num_dims = expression1->value().mat.get_num_dims();
+
+			if (!first.is_mat())
+				Throw_error(__FILE__, __LINE__, __func__, "Parameter must be matrix");
+
+			switch (num_dims)
+			{
+			case 2:
+				result.mat.set_mat4(first.mat.to_mat2());
+				break;
+			case 3:
+				result.mat.set_mat4(first.mat.to_mat3());
+				break;
+			case 4:
+				result.mat.set_mat4(first.mat.to_mat4());
+				break;
+			default: Throw_error(__FILE__, __LINE__, __func__, "Wrong base of matrix");
 			}
 
 			return result;

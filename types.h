@@ -115,18 +115,21 @@ namespace Math_solver {
 		}
 
 		glm::dmat2 to_mat2() const {
-			return glm::dmat2(_value[0][0], _value[0][1],
+			return glm::dmat2(
+				_value[0][0], _value[0][1],
 				_value[1][0], _value[1][1]);
 		}
 
 		glm::dmat3 to_mat3() const {
-			return glm::dmat3(_value[0][0], _value[0][1], _value[0][2],
+			return glm::dmat3(
+				_value[0][0], _value[0][1], _value[0][2],
 				_value[1][0], _value[1][1], _value[1][2],
 				_value[2][0], _value[2][1], _value[2][2]);
 		}
 
 		glm::dmat4 to_mat4() const {
-			return glm::dmat4(_value[0][0], _value[0][1], _value[0][2], _value[0][3],
+			return glm::dmat4(
+				_value[0][0], _value[0][1], _value[0][2], _value[0][3],
 				_value[1][0], _value[1][1], _value[1][2], _value[1][3],
 				_value[2][0], _value[2][1], _value[2][2], _value[2][3],
 				_value[3][0], _value[3][1], _value[3][2], _value[3][3]);

@@ -65,7 +65,7 @@ namespace Math_solver {
 		void ExecuteThreeParameterFunction(TokenType functionName);
 		void ExecuteFourParameterFunction(TokenType functionName);
 		void CreateVector();
-		void CreateMatrix();
+		void CreateMatrix(TokenType t);
 
 		const TokenType GetToken(const bool ignoreSign = false);
 		void Primary(const bool get);

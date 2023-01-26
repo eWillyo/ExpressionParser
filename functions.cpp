@@ -15,6 +15,9 @@ namespace Math_solver {
 		{ "sin", TokenType::SIN_FN },
 		{ "cos", TokenType::COS_FN },
 		{ "tan", TokenType::TAN_FN },
+		{ "sinh", TokenType::SINH_FN },
+		{ "cosh", TokenType::COSH_FN },
+		{ "tanh", TokenType::TANH_FN },
 		{ "asin", TokenType::ASIN_FN },
 		{ "acos", TokenType::ACOS_FN },
 		{ "atan", TokenType::ATAN_FN },
@@ -68,6 +71,18 @@ namespace Math_solver {
 		case TokenType::TAN_FN:
 			Print_info("TAN function");
 			return TokenType(TAN_FN);
+
+		case TokenType::SINH_FN:
+			Print_info("SINH function");
+			return TokenType(SINH_FN);
+
+		case TokenType::COSH_FN:
+			Print_info("COSH function");
+			return TokenType(COSH_FN);
+
+		case TokenType::TANH_FN:
+			Print_info("TANH function");
+			return TokenType(TANH_FN);
 
 		case TokenType::ASIN_FN:
 			Print_info("ASIN function");

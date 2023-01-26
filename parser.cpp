@@ -213,7 +213,7 @@ namespace Math_solver {
 		GetToken(true);
 	}
 
-	void Parser::CreateMatrix()
+	void Parser::CreateMatrix(TokenType t)
 	{
 		value_ = value_t(glm::dmat4(1.0), max_dim_); // Identity matrix
 
@@ -221,9 +221,17 @@ namespace Math_solver {
 		CheckToken(LHPAREN);
 
 		GetToken(true);
-		CheckToken(RHPAREN);
+		if (type_ == RHPAREN) { // no parameters
+			nodes.push_back(new NumNode(value_));
+		}
+		else { // got parameter
+			AddSubtract(false);
+			BaseNode* par = nodes.back();
 
-		nodes.push_back(new NumNode(value_));
+			nodes.push_back(new FuncNode(t, par));
+
+			CheckToken(RHPAREN);
+		}
 		max_dim_ = 1;
 		GetToken(true);
 	}
@@ -418,6 +426,21 @@ namespace Math_solver {
 			ExecuteOneParameterFunction(TAN_FN);
 			break;
 		}
+		case SINH_FN:
+		{
+			ExecuteOneParameterFunction(SINH_FN);
+			break;
+		}
+		case COSH_FN:
+		{
+			ExecuteOneParameterFunction(COSH_FN);
+			break;
+		}
+		case TANH_FN:
+		{
+			ExecuteOneParameterFunction(TANH_FN);
+			break;
+		}
 		case ASIN_FN:
 		{
 			ExecuteOneParameterFunction(ASIN_FN);
@@ -479,19 +502,19 @@ namespace Math_solver {
 		case MAT2_FN:
 		{
 			max_dim_ = 2;
-			CreateMatrix();
+			CreateMatrix(MAT2_FN);
 			break;
 		}
 		case MAT3_FN:
 		{
 			max_dim_ = 3;
-			CreateMatrix();
+			CreateMatrix(MAT3_FN);
 			break;
 		}
 		case MAT4_FN:
 		{
 			max_dim_ = 4;
-			CreateMatrix();
+			CreateMatrix(MAT4_FN);
 			break;
 		}
 		case LENGTH_FN:

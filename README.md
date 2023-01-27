@@ -30,7 +30,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
  
  
   * Support for loading scripts from file
-  * Binary, hexadecimal, octal to/from decimal conversion
+  * Binary, hexadecimal, octal to decimal conversion
   * Add arrays
   * Add vector casting
   * Custom defined functions

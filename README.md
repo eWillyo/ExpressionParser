@@ -29,6 +29,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
  # TO DO: 
  
  
+  * Support for loading scripts from file
   * Binary, hexadecimal, octal to/from decimal conversion
   * Add arrays
   * Add vector casting

@@ -1,7 +1,7 @@
 # Expression parser
 
 
- Simple math solver with variables, goniometric functions, logarithms, vectors, etc. This project should suits C++11 standards. Original idea dates back to 2010. I significantly inspired myself on "codeproject.com", when I was creating this easy to implement expression parser. After years I came back to project and finally finished it. 
+ Simple math solver with variables, goniometric functions, logarithms, vectors, etc. This project should suits C++11 standards. Original idea dates back to 2010. I significantly inspired myself on "codeproject.com", when I was creating this easy to implement expression parser. After years I came back to project and finally try to finish it. 
  
  
   [![Expression input](https://github.com/eWillyo/ExpressionParser/blob/a966ae5f640ba9ece3d49580170910264f50ac47/expression_input.png?raw=true)](https://www.youtube.com/watch?v=lFQNcjrtSyo)
@@ -41,9 +41,6 @@ The only library which this project depends on (except STL) is GLM [https://gith
  
           Enter expression: 9 / 8
           Result: 1.125
-          
-          Enter expression: sin(RAD(rand(360)))
-          Result: 0.529919
 
           Enter expression: cos(pi)
           Result: -1
@@ -67,9 +64,9 @@ The only library which this project depends on (except STL) is GLM [https://gith
           Enter expression: DEG(acos(dot(v1,v2)))
           Result: 90
           
-          Enter expression: t = rotate(translate(mat4(), vec3(10,10,10)), RAD(90), vec3(0,1,0))
+          Enter expression: t = rotate(translate(mat4(), vec3(10,10,10)), RAD(rand(360)), vec3(0,1,0))
           Enter expression: t * vec4(6,6,6,1)
-          Result: ( 16, 16, 4, 1 )
+          Result: ( 2.883644, 16, 14.621415, 1 )
           
 
 

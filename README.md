@@ -37,7 +37,7 @@ The only library which this project depends on (except STL) is GLM [https://gith
   * Optimize code
  
  
- # Examples:
+ # EXAMPLES:
  
           Enter expression: 9 / 8
           Result: 1.125
